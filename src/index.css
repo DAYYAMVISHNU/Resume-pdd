@@ -1,0 +1,36 @@
+/* @import url() FONT IMPORTS MUST ALWAYS BE AT THE VERY TOP OF THIS FILE, ABOVE THE TAILWIND IMPORTS — DO NOT DELETE THIS COMMENT */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CRITICAL: THE FOLLOWING TAILWIND IMPORTS MUST NEVER BE DELETED OR REORDERED — DO NOT DELETE THIS COMMENT */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* END TAILWIND IMPORTS — ALL OTHER CSS MUST GO BELOW THIS LINE */
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f3f4f6;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+}
+/* Mobile app container simulation */
+#root {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+.app-container {
+  width: 100%;
+  max-width: 430px; /* iPhone 14 Pro Max width */
+  background-color: #ffffff;
+  min-height: 100vh;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  overflow-x: hidden;
+}
+/* Hide scrollbar for clean app look */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
