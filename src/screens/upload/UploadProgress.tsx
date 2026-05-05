@@ -39,7 +39,7 @@ export const UploadProgress = () => {
           formData.append("resume", file);
           formData.append("job_desc", jdText || "Generic software engineer requirement");
 
-          const response = await fetch(`http://${window.location.hostname}:5000/analyze`, {
+          const response = await fetch(`/analyze`, {
             method: "POST",
             body: formData,
           });
@@ -82,20 +82,10 @@ export const UploadProgress = () => {
       // Sort results by score
       results.sort((a, b) => b.score - a.score);
 
-      // Save to localStorage
-      const topScore = results.length > 0 ? results[0].score : 0;
-      const newAnalysis = {
-        id: Date.now(),
-        role: jdText ? 'Job Match Analysis' : 'Resume Scan',
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        count: files.length,
-        topScore: topScore,
-        status: 'Completed'
-      };
-      
-      const existingAnalyses = JSON.parse(localStorage.getItem('myAnalyses') || '[]');
-      localStorage.setItem('myAnalyses', JSON.stringify([newAnalysis, ...existingAnalyses]));
-      
+      // Save the actual full results to localStorage so they persist across page reloads!
+      localStorage.setItem('currentAnalysisCandidates', JSON.stringify(results));
+
+      // Saved implicitly by backend during analyze calls.
       setTimeout(() => {
         navigate('/ranking/overview', { state: { candidates: results } });
       }, 1000);

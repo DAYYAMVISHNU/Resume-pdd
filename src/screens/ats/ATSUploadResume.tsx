@@ -34,10 +34,8 @@ export const ATSUploadResume = () => {
     try {
       const formData = new FormData();
       formData.append("resume", selectedFile);
-      // ATS Check usually doesn't need a specific JD, or we can use a generic one to test
-      formData.append("job_desc", "Software Engineer developer React Python Node AWS UI UX");
 
-      const response = await fetch(`http://${window.location.hostname}:5000/analyze`, {
+      const response = await fetch(`/ats_check`, {
         method: "POST",
         body: formData,
       });
@@ -45,18 +43,8 @@ export const ATSUploadResume = () => {
       const data = await response.json();
       console.log("Backend Result:", data);
 
-      // Save to localStorage
-      const newAnalysis = {
-        id: Date.now(),
-        role: 'ATS Compatibility Check',
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        count: 1,
-        topScore: data.score || 0,
-        status: 'Completed'
-      };
-      const existingAnalyses = JSON.parse(localStorage.getItem('myAnalyses') || '[]');
-      localStorage.setItem('myAnalyses', JSON.stringify([newAnalysis, ...existingAnalyses]));
-
+      // Analytics are now fully handled by the backend
+      
       navigate('/ats/results', { state: data });
 
     } catch (error) {

@@ -55,7 +55,7 @@ export const ATSScoreResults = () => {
           </p>
         </Card>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <Card
             hoverable
             padding="sm"
@@ -86,27 +86,46 @@ export const ATSScoreResults = () => {
           </Card>
         </div>
 
+        <Button 
+          fullWidth 
+          size="lg" 
+          onClick={() => navigate('/ats/perfect', { state: data })}
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg mb-6 transform transition-all active:scale-[0.98]">
+          <div className="flex items-center justify-center">
+            <span className="font-bold text-lg">Create Perfect Resume ✨</span>
+          </div>
+        </Button>
+
+
+
         <Card>
-          <h3 className="font-bold text-gray-900 mb-3">Quick Summary</h3>
+          <h3 className="font-bold text-gray-900 mb-3">Areas for Improvement</h3>
           <ul className="space-y-2 text-sm">
-            {data.matched_skills && data.matched_skills.length > 0 ? (
-              data.matched_skills.map((skill: string, index: number) => (
-                <li key={index} className="flex items-start">
-                  <CheckCircle2
-                    size={16}
-                    className="text-green-500 mr-2 mt-0.5 shrink-0" />
-                  <span className="text-gray-600 capitalize">
-                    Matched Skill: {skill}
+            {data.missing_skills && data.missing_skills.length > 0 && (
+              data.missing_skills.map((skill: string, index: number) => (
+                <li key={`ms-${index}`} className="flex items-start">
+                  <AlertTriangle size={16} className="text-orange-500 mr-2 mt-0.5 shrink-0" />
+                  <span className="text-gray-600">
+                    Missing Skill: <span className="font-semibold capitalize text-gray-800">{skill}</span>
                   </span>
                 </li>
               ))
-            ) : (
+            )}
+            {data.missing_keywords && data.missing_keywords.length > 0 && (
+              data.missing_keywords.map((keyword: string, index: number) => (
+                <li key={`mk-${index}`} className="flex items-start">
+                  <AlertTriangle size={16} className="text-yellow-500 mr-2 mt-0.5 shrink-0" />
+                  <span className="text-gray-600">
+                    Missing Keyword: <span className="font-semibold text-gray-800">{keyword}</span>
+                  </span>
+                </li>
+              ))
+            )}
+            {(!data.missing_skills || data.missing_skills.length === 0) && (!data.missing_keywords || data.missing_keywords.length === 0) && (
               <li className="flex items-start">
-                <AlertTriangle
-                  size={16}
-                  className="text-yellow-500 mr-2 mt-0.5 shrink-0" />
+                <CheckCircle2 size={16} className="text-green-500 mr-2 mt-0.5 shrink-0" />
                 <span className="text-gray-600">
-                  No key skills matched the job description.
+                  Great job! No major missing keywords identified.
                 </span>
               </li>
             )}

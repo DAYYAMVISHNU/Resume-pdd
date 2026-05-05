@@ -18,11 +18,7 @@ export const ProfilePage = () => {
     label: 'Account Settings',
     path: '/settings'
   },
-  {
-    icon: CreditCard,
-    label: 'Subscription & Pricing',
-    path: '/pricing'
-  },
+
   {
     icon: HelpCircle,
     label: 'Help & Support',
@@ -36,7 +32,7 @@ export const ProfilePage = () => {
 
   const userName = localStorage.getItem('userName') || 'Demo User';
   const initials = userName.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
-  const userEmail = localStorage.getItem('userEmail') || 'demo@resumatch.ai';
+  const userEmail = localStorage.getItem('userEmail') || 'demo@resumeanalysis.ai';
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">

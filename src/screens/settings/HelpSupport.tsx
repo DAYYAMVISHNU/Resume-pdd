@@ -15,11 +15,25 @@ export const HelpSupport = () => {
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
   const currentUserEmail = localStorage.getItem('userEmail');
 
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
   const faqs = [
-    'How does the AI rank resumes?',
-    'What file formats are supported?',
-    'Is my data secure?',
-    'How accurate is the ATS score?'
+    {
+      q: 'How does the AI rank resumes?',
+      a: "Our AI analyzes semantic overlap between the job description and the candidate's experience, focusing on key skills and context rather than just keyword matching."
+    },
+    {
+      q: 'What file formats are supported?',
+      a: 'Currently, we support PDF, DOCX, and TXT files for resume uploads.'
+    },
+    {
+      q: 'Is my data secure?',
+      a: 'Yes, all resumes are processed securely. We do not store personal data longer than necessary for the session unless you explicitly save the analysis.'
+    },
+    {
+      q: 'How accurate is the ATS score?',
+      a: 'The ATS score closely mirrors standard enterprise Applicant Tracking Systems, giving you a reliable benchmark of how a resume will perform.'
+    }
   ];
 
   const handleChatClick = () => {
@@ -33,10 +47,10 @@ export const HelpSupport = () => {
     const fetchChatData = async () => {
       try {
         if (isAdmin && !activeConversationEmail) {
-          const res = await fetch(`http://${window.location.hostname}:5000/chat/conversations`);
+          const res = await fetch(`/chat/conversations`);
           if (res.ok) setConversations(await res.json());
         } else if (activeConversationEmail) {
-          const res = await fetch(`http://${window.location.hostname}:5000/chat/messages?email=${activeConversationEmail}`);
+          const res = await fetch(`/chat/messages?email=${activeConversationEmail}`);
           if (res.ok) setChatHistory(await res.json());
         }
       } catch (e) {
@@ -59,7 +73,7 @@ export const HelpSupport = () => {
     setChatMessage('');
 
     try {
-      await fetch(`http://${window.location.hostname}:5000/chat/send`, {
+      await fetch(`/chat/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -109,17 +123,26 @@ export const HelpSupport = () => {
           <h3 className="font-bold text-gray-900 mb-3 px-1">Frequently Asked Questions</h3>
           <div className="space-y-2">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white p-4 rounded-xl border border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-700">{faq}</span>
-                <ChevronDown size={18} className="text-gray-400" />
+              <div 
+                key={i} 
+                className="bg-white p-4 rounded-xl border border-gray-100 flex flex-col cursor-pointer"
+                onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+              >
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-700">{faq.q}</span>
+                  <ChevronDown size={18} className={`text-gray-400 transition-transform ${openFaqIndex === i ? 'rotate-180' : ''}`} />
+                </div>
+                {openFaqIndex === i && (
+                  <div className="mt-3 pt-3 border-t border-gray-50 text-sm text-gray-500 leading-relaxed">
+                    {faq.a}
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="pt-4">
-          <Button fullWidth variant="outline">View All Documentation</Button>
-        </div>
+
       </div>
 
       {/* Live Chat Modal */}

@@ -47,6 +47,7 @@ import { ATSScoreBreakdown } from './screens/ats/ATSScoreBreakdown';
 import { ATSImprovementSuggestions } from './screens/ats/ATSImprovementSuggestions';
 import { ATSScoreHistory } from './screens/ats/ATSScoreHistory';
 import { ATSScoreComparison } from './screens/ats/ATSScoreComparison';
+import { ATSPerfectResume } from './screens/ats/ATSPerfectResume';
 // Resume Details
 import { ResumeDetailView } from './screens/resume-details/ResumeDetailView';
 import { SkillsExtraction } from './screens/resume-details/SkillsExtraction';
@@ -78,7 +79,7 @@ export function App() {
       const userName = localStorage.getItem('userName');
       if (userEmail && userName) {
         try {
-          await fetch(`http://${window.location.hostname}:5000/ping`, {
+          await fetch(`/ping`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: userEmail, name: userName })
@@ -172,6 +173,7 @@ export function App() {
             
             <Route path="/ats/history" element={<ATSScoreHistory />} />
             <Route path="/ats/comparison" element={<ATSScoreComparison />} />
+            <Route path="/ats/perfect" element={<ATSPerfectResume />} />
 
             {/* Resume Details */}
             <Route path="/resume/:id" element={<ResumeDetailView />} />

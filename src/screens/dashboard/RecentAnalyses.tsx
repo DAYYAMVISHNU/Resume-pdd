@@ -10,8 +10,18 @@ export const RecentAnalyses = () => {
   const [analyses, setAnalyses] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    const savedAnalyses = JSON.parse(localStorage.getItem('myAnalyses') || '[]');
-    setAnalyses(savedAnalyses);
+    const fetchAnalyses = async () => {
+      try {
+        const response = await fetch(`/analytics`);
+        if (response.ok) {
+          const data = await response.json();
+          setAnalyses(data.recent_analyses || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch analyses", err);
+      }
+    };
+    fetchAnalyses();
   }, []);
 
   return (

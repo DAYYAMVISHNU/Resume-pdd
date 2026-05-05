@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: resume-analyzer-backend
+    env: python
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+
+  - type: web
+    name: resume-analyzer-frontend
+    env: static
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "./dist"
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.1
+    routes:
+      - type: rewrite
+        source: /analyze
+        destination: https://resume-analyzer-backend.onrender.com/analyze
+      - type: rewrite
+        source: /ats_check
+        destination: https://resume-analyzer-backend.onrender.com/ats_check
+      - type: rewrite
+        source: /analytics
+        destination: https://resume-analyzer-backend.onrender.com/analytics
+      - type: rewrite
+        source: /ping
+        destination: https://resume-analyzer-backend.onrender.com/ping
+      - type: rewrite
+        source: /active_users
+        destination: https://resume-analyzer-backend.onrender.com/active_users
+      - type: rewrite
+        source: /chat/*
+        destination: https://resume-analyzer-backend.onrender.com/chat/*
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -11,7 +11,7 @@ export const ActiveUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`http://${window.location.hostname}:5000/active_users`);
+        const response = await fetch(`/active_users`);
         if (response.ok) {
           const data = await response.json();
           const mappedData = data.map((u: any, idx: number) => ({

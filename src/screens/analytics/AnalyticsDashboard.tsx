@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomNav } from '../../components/layout/BottomNav';
 import { Card } from '../../components/ui/Card';
@@ -16,58 +16,53 @@ import {
 import { ChevronRight, TrendingUp, Users, FileText } from 'lucide-react';
 export const AnalyticsDashboard = () => {
   const navigate = useNavigate();
-  const volumeData = [
-  {
-    name: 'Mon',
-    resumes: 12
-  },
-  {
-    name: 'Tue',
-    resumes: 19
-  },
-  {
-    name: 'Wed',
-    resumes: 15
-  },
-  {
-    name: 'Thu',
-    resumes: 22
-  },
-  {
-    name: 'Fri',
-    resumes: 30
-  },
-  {
-    name: 'Sat',
-    resumes: 5
-  },
-  {
-    name: 'Sun',
-    resumes: 8
-  }];
+  
+  const [stats, setStats] = useState({
+    candidates: 0,
+    analyses: 0,
+    volumeData: [
+      { name: 'Mon', resumes: 0 },
+      { name: 'Tue', resumes: 0 },
+      { name: 'Wed', resumes: 0 },
+      { name: 'Thu', resumes: 0 },
+      { name: 'Fri', resumes: 0 },
+      { name: 'Sat', resumes: 0 },
+      { name: 'Sun', resumes: 0 }
+    ],
+    scoreData: [] as any[]
+  });
 
-  const scoreData = [
-  {
-    name: 'Week 1',
-    score: 65
-  },
-  {
-    name: 'Week 2',
-    score: 68
-  },
-  {
-    name: 'Week 3',
-    score: 74
-  },
-  {
-    name: 'Week 4',
-    score: 76
-  }];
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch(`/analytics`);
+        if (response.ok) {
+          const data = await response.json();
+          const volumeData = Object.keys(data.volume_by_day).map(key => ({
+            name: key,
+            resumes: data.volume_by_day[key]
+          }));
+          setStats({
+            candidates: data.total_candidates,
+            analyses: data.total_analyses,
+            volumeData,
+            scoreData: data.score_history
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch analytics", error);
+      }
+    };
+    
+    fetchAnalytics();
+    const interval = setInterval(fetchAnalytics, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="bg-indigo-600 px-6 pt-12 pb-8 rounded-b-[2rem] shadow-sm text-white">
-        <h1 className="text-2xl font-bold mb-2">Analytics</h1>
+        <h1 className="text-2xl font-bold mb-2">Real Analytics Live</h1>
         <p className="text-indigo-100 text-sm">
           Insights from your resume processing.
         </p>
@@ -82,9 +77,9 @@ export const AnalyticsDashboard = () => {
                 Candidates
               </span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">1,492</div>
+            <div className="text-2xl font-bold text-gray-900">{stats.candidates}</div>
             <div className="text-xs text-green-500 flex items-center mt-1">
-              <TrendingUp size={12} className="mr-1" /> +12% this week
+              <TrendingUp size={12} className="mr-1" /> Live tracking
             </div>
           </Card>
           <Card padding="sm" className="p-4">
@@ -94,9 +89,9 @@ export const AnalyticsDashboard = () => {
                 Analyses
               </span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">124</div>
+            <div className="text-2xl font-bold text-gray-900">{stats.analyses}</div>
             <div className="text-xs text-green-500 flex items-center mt-1">
-              <TrendingUp size={12} className="mr-1" /> +5% this week
+              <TrendingUp size={12} className="mr-1" /> Live tracking
             </div>
           </Card>
         </div>
@@ -109,7 +104,7 @@ export const AnalyticsDashboard = () => {
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={volumeData}
+                data={stats.volumeData}
                 margin={{
                   top: 0,
                   right: 0,
@@ -158,7 +153,7 @@ export const AnalyticsDashboard = () => {
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={scoreData}
+                data={stats.scoreData}
                 margin={{
                   top: 5,
                   right: 5,
@@ -222,11 +217,11 @@ export const AnalyticsDashboard = () => {
           <Card
             hoverable
             padding="sm"
-            onClick={() => navigate('/analytics/funnel')}
+            onClick={() => navigate('/help')}
             className="flex items-center justify-between p-4">
             
             <span className="text-sm font-semibold text-gray-900">
-              Hiring Funnel
+              FAQs & Answers
             </span>
             <ChevronRight size={18} className="text-gray-400" />
           </Card>

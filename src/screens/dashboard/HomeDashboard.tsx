@@ -22,24 +22,31 @@ export const HomeDashboard = () => {
   });
 
   React.useEffect(() => {
-    const savedAnalyses = JSON.parse(localStorage.getItem('myAnalyses') || '[]');
-    setRecentActivity(savedAnalyses.slice(0, 3));
-    
-    let totalAnalyses = savedAnalyses.length;
-    let resumesScanned = 0;
-    let totalScore = 0;
-    let scoreCount = 0;
-
-    savedAnalyses.forEach((a: any) => {
-      resumesScanned += a.count || 0;
-      if (a.topScore) {
-        totalScore += a.topScore;
-        scoreCount++;
+    const fetchStats = async () => {
+      try {
+        const response = await fetch(`/analytics`);
+        if (response.ok) {
+          const data = await response.json();
+          let avgScore = 0;
+          if (data.score_history && data.score_history.length > 0) {
+             const sum = data.score_history.reduce((acc: any, curr: any) => acc + curr.score, 0);
+             avgScore = Math.round(sum / data.score_history.length);
+          }
+          setRealStats({
+            totalAnalyses: data.total_analyses,
+            resumesScanned: data.total_candidates,
+            avgScore: avgScore
+          });
+          setRecentActivity((data.recent_analyses || []).slice(0, 3));
+        }
+      } catch (err) {
+        console.error("Failed to fetch real stats", err);
       }
-    });
+    };
 
-    const avgScore = scoreCount > 0 ? Math.round(totalScore / scoreCount) : 0;
-    setRealStats({ totalAnalyses, resumesScanned, avgScore });
+    fetchStats();
+    const interval = setInterval(fetchStats, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const stats = [
@@ -68,6 +75,13 @@ export const HomeDashboard = () => {
   const userName = localStorage.getItem('userName') || 'Demo User';
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning,';
+    if (hour < 18) return 'Good afternoon,';
+    return 'Good evening,';
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       {/* Header */}
@@ -75,7 +89,7 @@ export const HomeDashboard = () => {
         <div className="flex justify-between items-center mb-6">
           <div>
             <p className="text-indigo-100 text-sm font-medium mb-1">
-              Good morning,
+              {getGreeting()}
             </p>
             <h1 className="text-2xl font-bold text-white">{userName}</h1>
           </div>

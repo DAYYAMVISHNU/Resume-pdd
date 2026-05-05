@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { Card } from '../../components/ui/Card';
-import { Mail, Phone, MapPin, Linkedin, Globe, Github } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Globe } from 'lucide-react';
 export const ContactInfoParsed = () => {
   const location = useLocation();
   const candidate = location.state?.candidate || {
@@ -41,13 +41,7 @@ export const ContactInfoParsed = () => {
     color: 'text-indigo-600',
     bg: 'bg-indigo-50'
   },
-  {
-    icon: Github,
-    label: 'GitHub',
-    value: 'github.com/sarahcodes',
-    color: 'text-gray-800',
-    bg: 'bg-gray-100'
-  },
+
   {
     icon: Globe,
     label: 'Portfolio',

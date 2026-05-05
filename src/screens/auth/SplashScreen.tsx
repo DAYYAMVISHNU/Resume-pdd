@@ -45,7 +45,7 @@ export const SplashScreen = () => {
           }}
           className="text-3xl font-bold mb-2 tracking-tight">
           
-          ResuMatch
+          Resume Analysis
         </motion.h1>
         <motion.p
           initial={{

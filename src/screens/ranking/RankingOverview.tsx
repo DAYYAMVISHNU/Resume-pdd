@@ -8,7 +8,17 @@ import { Trophy, ChevronRight, Download, Users } from 'lucide-react';
 export const RankingOverview = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { candidates = [] } = location.state || {};
+  let { candidates = [] } = location.state || {};
+
+  // Fallback to localStorage if state is lost
+  if (candidates.length === 0) {
+    const saved = localStorage.getItem('currentAnalysisCandidates');
+    if (saved) {
+      try {
+        candidates = JSON.parse(saved);
+      } catch(e) {}
+    }
+  }
 
   // Fallback to empty state if no candidates
   if (candidates.length === 0) {
@@ -39,7 +49,7 @@ export const RankingOverview = () => {
         title="Analysis Results"
         rightAction={
           <button
-            onClick={() => navigate('/ranking/export')}
+            onClick={() => navigate('/ranking/export', { state: { candidates } })}
             className="p-2 text-indigo-600">
             <Download size={20} />
           </button>
