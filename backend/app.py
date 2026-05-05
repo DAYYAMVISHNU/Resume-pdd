@@ -392,6 +392,21 @@ def get_conversations():
             })
     return jsonify(summaries)
 
+@app.route("/share", methods=["POST"])
+def share_resume():
+    data = request.get_json()
+    email = data.get("email")
+    if not email:
+        return jsonify({"success": False, "error": "Email is required"}), 400
+        
+    # Simulate sending an email by sleeping slightly
+    time.sleep(1)
+    
+    return jsonify({
+        "success": True, 
+        "message": f"Perfect Resume successfully sent to {email}"
+    })
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", debug=False, port=port)

@@ -16,6 +16,10 @@ export const ATSPerfectResume = () => {
   const [step, setStep] = useState(needsLinkedin ? 'linkedin_prompt' : 'generating');
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [progress, setProgress] = useState(0);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [recruiterEmail, setRecruiterEmail] = useState('');
+  const [shareStatus, setShareStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [shareMessage, setShareMessage] = useState('');
 
   useEffect(() => {
     if (step === 'generating') {
@@ -249,6 +253,42 @@ export const ATSPerfectResume = () => {
     doc.save('Perfect_ATS_Resume.pdf');
   };
 
+  const handleShare = async () => {
+    if (!recruiterEmail || !recruiterEmail.includes('@')) {
+      setShareStatus('error');
+      setShareMessage('Please enter a valid email address.');
+      return;
+    }
+    
+    setShareStatus('sending');
+    try {
+      const response = await fetch('/share', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: recruiterEmail })
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        setShareStatus('success');
+        setShareMessage(result.message);
+        setTimeout(() => {
+          setShowShareModal(false);
+          setShareStatus('idle');
+          setRecruiterEmail('');
+        }, 3000);
+      } else {
+        setShareStatus('error');
+        setShareMessage(result.error || 'Failed to send email.');
+      }
+    } catch (e) {
+      setShareStatus('error');
+      setShareMessage('Network error. Please try again.');
+    }
+  };
+
   if (step === 'linkedin_prompt') {
     return (
       <div className="min-h-screen bg-gray-50 pb-24">
@@ -364,11 +404,55 @@ export const ATSPerfectResume = () => {
             <Button fullWidth size="lg" onClick={handleDownload} className="flex items-center justify-center shadow-md">
               <Download size={18} className="mr-2" /> Download Perfect Resume
             </Button>
-            <Button fullWidth variant="outline" size="lg" onClick={() => alert("Share functionality coming soon!")}>
+            <Button fullWidth variant="outline" size="lg" onClick={() => setShowShareModal(true)}>
               <Share2 size={18} className="mr-2" /> Share with Recruiter
             </Button>
           </div>
         </Card>
+        
+        {showShareModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl relative"
+            >
+              {shareStatus === 'success' ? (
+                <div className="text-center py-4">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 size={32} className="text-green-500" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Sent Successfully!</h3>
+                  <p className="text-sm text-gray-500">{shareMessage}</p>
+                </div>
+              ) : (
+                <>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Share Resume</h3>
+                  <p className="text-sm text-gray-500 mb-4">Send your perfectly optimized ATS resume directly to a recruiter or hiring manager.</p>
+                  
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Recruiter Email</label>
+                    <input 
+                      type="email" 
+                      value={recruiterEmail}
+                      onChange={(e) => setRecruiterEmail(e.target.value)}
+                      placeholder="recruiter@company.com"
+                      className="w-full border-2 border-gray-200 rounded-xl px-4 py-2 focus:border-indigo-600 focus:ring-0 outline-none"
+                    />
+                    {shareStatus === 'error' && <p className="text-xs text-red-500 mt-1">{shareMessage}</p>}
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <Button variant="outline" fullWidth onClick={() => setShowShareModal(false)}>Cancel</Button>
+                    <Button fullWidth onClick={handleShare} disabled={shareStatus === 'sending'}>
+                      {shareStatus === 'sending' ? 'Sending...' : 'Send Email'}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </div>
+        )}
         
         <div className="text-center">
           <button onClick={() => navigate('/dashboard')} className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition-colors">

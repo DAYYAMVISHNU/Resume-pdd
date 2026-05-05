@@ -12,7 +12,8 @@ export default defineConfig({
       '/analytics': 'http://127.0.0.1:5000',
       '/ping': 'http://127.0.0.1:5000',
       '/active_users': 'http://127.0.0.1:5000',
-      '/chat': 'http://127.0.0.1:5000'
+      '/chat': 'http://127.0.0.1:5000',
+      '/share': 'http://127.0.0.1:5000'
     }
   }
 })
