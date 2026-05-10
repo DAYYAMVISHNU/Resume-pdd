@@ -33,6 +33,9 @@ services:
         source: /active_users
         destination: https://resume-analyzer-backend.onrender.com/active_users
       - type: rewrite
+        source: /share
+        destination: https://resume-analyzer-backend.onrender.com/share
+      - type: rewrite
         source: /chat/*
         destination: https://resume-analyzer-backend.onrender.com/chat/*
       - type: rewrite
