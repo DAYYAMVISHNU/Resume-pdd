@@ -1,6 +1,8 @@
 {
+  "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "installCommand": "npm install",
   "rewrites": [
     { "source": "/analyze", "destination": "/api/index" },
     { "source": "/ats_check", "destination": "/api/index" },
