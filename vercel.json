@@ -1,0 +1,14 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/analyze", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/analyze" },
+    { "source": "/ats_check", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/ats_check" },
+    { "source": "/analytics", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/analytics" },
+    { "source": "/ping", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/ping" },
+    { "source": "/active_users", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/active_users" },
+    { "source": "/share", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/share" },
+    { "source": "/chat/(.*)", "destination": "https://resume-analyzer-backend-PLACEHOLDER.koyeb.app/chat/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
