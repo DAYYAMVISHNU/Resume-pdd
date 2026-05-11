@@ -7,7 +7,12 @@ import { UploadCloud, FileText, X } from 'lucide-react';
 export const UploadResumes = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const jdText = location.state?.jdText || '';
+  let jdText = location.state?.jdText || '';
+  
+  // Fallback to localStorage if state is lost
+  if (!jdText) {
+    jdText = localStorage.getItem('currentJobDescription') || '';
+  }
   const [isDragging, setIsDragging] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -2,11 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { FileText, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
+import { getApiUrl } from '../../config/ApiConfig';
 
 export const UploadProgress = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { files = [], jdText = '' } = location.state || {};
+  const { files = [] } = location.state || {};
+  let jdText = location.state?.jdText || '';
+  
+  // Fallback to localStorage if state is lost
+  if (!jdText) {
+    jdText = localStorage.getItem('currentJobDescription') || '';
+  }
   
   const [progress, setProgress] = useState(0);
   const [fileStatuses, setFileStatuses] = useState<{name: string, status: 'waiting' | 'uploading' | 'done' | 'error', p: number, result?: any}[]>(
@@ -39,14 +46,26 @@ export const UploadProgress = () => {
           formData.append("resume", file);
           formData.append("job_desc", jdText || "Generic software engineer requirement");
 
-          const response = await fetch(`/analyze`, {
-            method: "POST",
-            body: formData,
+          // Use XMLHttpRequest instead of fetch to bypass Android WebView FormData hang bug
+          const data: any = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", getApiUrl('/analyze'), true);
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                  resolve(JSON.parse(xhr.responseText));
+                } catch (e) {
+                  reject(new Error("Invalid JSON"));
+                }
+              } else {
+                reject(new Error(`Server error: ${xhr.status}`));
+              }
+            };
+            xhr.onerror = () => reject(new Error("Network error"));
+            xhr.timeout = 60000;
+            xhr.ontimeout = () => reject(new Error("Request timed out after 60s"));
+            xhr.send(formData);
           });
-
-          if (!response.ok) throw new Error("Backend error");
-
-          const data = await response.json();
           
           results.push({
             id: i + 1,
@@ -55,6 +74,7 @@ export const UploadProgress = () => {
             role: 'Candidate', // Or extract from resume if backend supports it
             match: data.score >= 80 ? 'Excellent' : data.score >= 60 ? 'Good' : 'Fair',
             matched_skills: data.matched_skills || [],
+            missing_skills: data.missing_skills || [],
             email: data.email || '',
             phone: data.phone || ''
           });

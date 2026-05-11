@@ -4,21 +4,33 @@ import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { CheckCircle2, Briefcase, GraduationCap, Edit2 } from 'lucide-react';
+import { CheckCircle2, Briefcase, GraduationCap, Edit2, FileText } from 'lucide-react';
 
 export const JobDescriptionPreview = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const jdText = location.state?.jdText || '';
+  let jdText = location.state?.jdText || '';
+  
+  // Fallback to localStorage if state is lost
+  if (!jdText) {
+    jdText = localStorage.getItem('currentJobDescription') || '';
+  }
   
   const ALL_SKILLS = [
     'React', 'TypeScript', 'Node.js', 'GraphQL', 'AWS', 'System Design', 'Agile',
-    'Python', 'Java', 'SQL', 'MongoDB', 'UI', 'UX', 'Docker', 'Kubernetes', 'Machine Learning', 'Data Science'
+    'Python', 'Java', 'SQL', 'MongoDB', 'UI', 'UX', 'Docker', 'Kubernetes', 'Machine Learning', 'Data Science',
+    'JavaScript', 'HTML', 'CSS', 'Angular', 'Vue', 'Django', 'Flask', 'Spring Boot', 'Laravel',
+    'PostgreSQL', 'MySQL', 'Redis', 'Git', 'Linux', 'Bash', 'Leadership', 'Communication'
   ];
 
   let skills = ALL_SKILLS.filter(s => jdText.toLowerCase().includes(s.toLowerCase()));
   if (skills.length === 0) {
-    skills = ['General Software Engineering'];
+    // Try partial matching for common variations
+    const commonTerms = ['javascript', 'typescript', 'python', 'java', 'react', 'node', 'aws', 'docker', 'kubernetes', 'git', 'sql', 'agile'];
+    skills = commonTerms.filter(term => jdText.toLowerCase().includes(term));
+    if (skills.length === 0) {
+      skills = ['General Software Engineering'];
+    }
   }
 
   // Simple heuristic for experience
@@ -56,6 +68,18 @@ export const JobDescriptionPreview = () => {
             We've extracted the key requirements from your job description. Review them before uploading resumes.
           </p>
         </div>
+
+        <Card>
+          <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+            <FileText size={18} className="mr-2 text-gray-500" />
+            Job Description
+          </h3>
+          <div className="bg-gray-50 p-4 rounded-lg max-h-40 overflow-y-auto">
+            <p className="text-sm text-gray-700 whitespace-pre-wrap">
+              {jdText || "No job description entered."}
+            </p>
+          </div>
+        </Card>
 
         <Card>
           <h3 className="font-bold text-gray-900 mb-4 flex items-center">

@@ -3,14 +3,59 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
+      ]
+    }
+  ],
   "rewrites": [
-    { "source": "/analyze", "destination": "/api/index" },
-    { "source": "/ats_check", "destination": "/api/index" },
-    { "source": "/analytics", "destination": "/api/index" },
-    { "source": "/ping", "destination": "/api/index" },
-    { "source": "/active_users", "destination": "/api/index" },
-    { "source": "/share", "destination": "/api/index" },
-    { "source": "/chat/:path*", "destination": "/api/index" },
-    { "source": "/:path*", "destination": "/index.html" }
-  ]
+    {
+      "source": "/analyze",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/ats_check",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/analytics",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/ping",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/active_users",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/share",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/chat/:path*",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ],
+  "experimentalServices": {
+    "frontend": {
+      "routePrefix": "/",
+      "framework": "vite"
+    },
+    "backend": {
+      "entrypoint": "backend",
+      "routePrefix": "/_/backend"
+    }
+  }
 }

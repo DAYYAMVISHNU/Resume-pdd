@@ -4,6 +4,8 @@ import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { Button } from '../../components/ui/Button';
 import { UploadCloud, Loader2, FileText, X } from 'lucide-react';
 
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const ATSUploadResume = () => {
   const navigate = useNavigate();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -35,21 +37,33 @@ export const ATSUploadResume = () => {
       const formData = new FormData();
       formData.append("resume", selectedFile);
 
-      const response = await fetch(`/ats_check`, {
-        method: "POST",
-        body: formData,
+      // Use XMLHttpRequest instead of fetch to bypass Android WebView FormData hang bug
+      const data = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", getApiUrl('/ats_check'), true);
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch (e) {
+              reject(new Error("Invalid JSON response"));
+            }
+          } else {
+            reject(new Error(`Server error: ${xhr.status}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Network error"));
+        xhr.timeout = 60000; // 60 seconds timeout for Render cold start
+        xhr.ontimeout = () => reject(new Error("Request timed out after 60s"));
+        xhr.send(formData);
       });
 
-      const data = await response.json();
       console.log("Backend Result:", data);
-
-      // Analytics are now fully handled by the backend
-      
       navigate('/ats/results', { state: data });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Backend connection error:", error);
-      alert("Backend is not running. Please start Flask backend first.");
+      alert(`Backend connection failed: ${error?.message || 'Unknown error'}\nPlease ensure your internet is connected.`);
       setIsAnalyzing(false);
     }
   };
@@ -68,7 +82,8 @@ export const ATSUploadResume = () => {
               Analyzing Format...
             </h2>
             <p className="text-gray-500 max-w-[250px] mx-auto">
-              Connecting to backend and checking resume score.
+              Connecting to backend...<br/>
+              <span className="text-xs text-indigo-500 font-medium">(First request may take up to 60 seconds to wake up the server)</span>
             </p>
           </div>
         ) : (

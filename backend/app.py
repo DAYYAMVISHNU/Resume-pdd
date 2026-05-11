@@ -60,62 +60,78 @@ STOP_WORDS = {
 }
 
 COMMON_SKILLS = [
-    "python", "java", "c++", "c#", "javascript", "typescript", "react", "node.js", "node", "html", "css",
-    "sql", "mongodb", "postgresql", "mysql", "nosql", "redis", "elasticsearch",
-    "machine learning", "deep learning", "tensorflow", "pytorch", "keras", "scikit-learn",
-    "flask", "django", "fastapi", "spring boot", "express", "ruby on rails", "laravel",
-    "git", "docker", "kubernetes", "aws", "azure", "gcp", "terraform", "ansible", "jenkins",
-    "agile", "scrum", "jira", "confluence", "linux", "unix", "bash", "powershell",
-    "data analysis", "data science", "data engineering", "big data", "hadoop", "spark",
-    "kafka", "rabbitmq", "rest api", "graphql", "grpc", "microservices", "serverless",
-    "ci/cd", "devops", "mlops", "cybersecurity", "penetration testing", "blockchain",
-    "artificial intelligence", "nlp", "computer vision", "statistics", "mathematics",
-    "project management", "leadership", "communication", "problem solving", "teamwork",
-    "tableau", "power bi", "excel", "word", "powerpoint", "salesforce", "sap", "oracle"
+    # Programming Languages
+    "python", "java", "c++", "c#", "javascript", "typescript", "ruby", "php", "go", "rust", "swift", "kotlin", "scala", "r", "matlab",
+    # Web Technologies
+    "react", "angular", "vue", "node.js", "node", "express", "django", "flask", "fastapi", "spring boot", "laravel", "rails", "html", "css", "sass", "less",
+    # Databases
+    "sql", "mysql", "postgresql", "mongodb", "redis", "elasticsearch", "cassandra", "dynamodb", "oracle", "sqlite", "firebase",
+    # Cloud & DevOps
+    "aws", "azure", "gcp", "docker", "kubernetes", "terraform", "ansible", "jenkins", "github actions", "gitlab ci", "circleci",
+    # Data Science & ML
+    "machine learning", "deep learning", "tensorflow", "pytorch", "keras", "scikit-learn", "pandas", "numpy", "jupyter", "tableau", "power bi",
+    # Mobile
+    "android", "ios", "flutter", "react native", "xamarin", "ionic", "cordova",
+    # Other Tools & Skills
+    "git", "linux", "unix", "bash", "powershell", "agile", "scrum", "kanban", "jira", "confluence", "slack", "trello",
+    # Soft Skills
+    "leadership", "communication", "problem solving", "teamwork", "project management", "analytical", "critical thinking"
 ]
 
 def calculate_score(resume_text, job_desc):
     jd_lower = job_desc.lower()
     resume_lower = resume_text.lower()
     
-    # 1. Extract required skills from JD
+    # Extract required skills from job description
     required_skills = set()
     for skill in COMMON_SKILLS:
-        # Check for whole word match to avoid partial matches (e.g., 'node' in 'node.js' is okay, but 'c' in 'cat' is not)
-        if re.search(rf'\b{re.escape(skill)}\b', jd_lower):
-            required_skills.add(skill)
-
-    # 2. Extract regular words as fallback
+        # More flexible matching - check if skill words are in the text
+        skill_words = skill.split()
+        if len(skill_words) == 1:
+            # Single word skill
+            if re.search(rf'\b{re.escape(skill)}\b', jd_lower):
+                required_skills.add(skill)
+        else:
+            # Multi-word skill - check if all words are present
+            if all(word in jd_lower for word in skill_words):
+                required_skills.add(skill)
+    
+    # Extract words from both texts
     resume_words_raw = re.findall(r'[a-z0-9+#]+', resume_lower)
     job_words_raw = re.findall(r'[a-z0-9+#]+', jd_lower)
-
+    
     resume_words = set(w for w in resume_words_raw if w not in STOP_WORDS and len(w) > 2)
     job_words = set(w for w in job_words_raw if w not in STOP_WORDS and len(w) > 2)
-
+    
+    # If no specific skills found, rely on keyword matching
     if not required_skills:
-        # Fallback to word matching if no recognized skills are found
         if not job_words:
             return 0
         matched_words = resume_words.intersection(job_words)
+        if len(job_words) == 0:
+            return 0
         score = int((len(matched_words) / len(job_words)) * 100)
         return min(int(score * 1.2), 100)
-
-    # 3. Check matched skills
+    
+    # Calculate skill-based score
     matched_skills = set()
     for skill in required_skills:
-        if re.search(rf'\b{re.escape(skill)}\b', resume_lower):
-            matched_skills.add(skill)
-
-    # Calculate score based primarily on skills
-    skill_score = (len(matched_skills) / len(required_skills)) * 100
-
-    # Keyword density score (max 20 points)
+        skill_words = skill.split()
+        if len(skill_words) == 1:
+            if re.search(rf'\b{re.escape(skill)}\b', resume_lower):
+                matched_skills.add(skill)
+        else:
+            if all(word in resume_lower for word in skill_words):
+                matched_skills.add(skill)
+    
+    skill_score = (len(matched_skills) / len(required_skills)) * 100 if required_skills else 0
+    
+    # Keyword matching score (max 30% contribution)
     matched_words = resume_words.intersection(job_words)
-    keyword_score = min((len(matched_words) / max(1, len(job_words))) * 100, 20)
-
-    # Weighted final score: 80% skills, 20% general keywords
-    final_score = int((skill_score * 0.8) + keyword_score)
-
+    keyword_score = min((len(matched_words) / max(1, len(job_words))) * 100, 30)
+    
+    # Combine scores
+    final_score = int((skill_score * 0.7) + keyword_score)
     return min(final_score, 100)
 
 def extract_contact_info(text):
@@ -129,9 +145,7 @@ def extract_contact_info(text):
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "message": "Resume Analyzer Backend is running"
-    })
+    return jsonify({"message": "Resume Analyzer Backend is running"})
 
 @app.route("/analyze", methods=["POST"])
 def analyze_resume():
@@ -139,20 +153,18 @@ def analyze_resume():
     job_desc = ""
 
     if request.is_json:
-        data = request.get_json()
+        data = request.get_json() or {}
         resume_text = data.get("resume", "")
         job_desc = data.get("job_desc", "")
     else:
         resume_file = request.files.get("resume")
         job_desc = request.form.get("job_desc", "")
-        
         if resume_file:
             resume_text = extract_text_from_file(resume_file)
 
     score = calculate_score(resume_text, job_desc)
     email, phone = extract_contact_info(resume_text)
 
-    # Update Analytics
     day_name = datetime.now().strftime("%a")
     analytics_data["total_candidates"] += 1
     analytics_data["total_analyses"] += 1
@@ -176,6 +188,7 @@ def analyze_resume():
     })
     if len(analytics_data["recent_analyses"]) > 20:
         analytics_data["recent_analyses"].pop()
+
     matched_skills = []
     missing_skills = []
     
@@ -183,20 +196,24 @@ def analyze_resume():
     jd_lower = job_desc.lower()
 
     for skill in COMMON_SKILLS:
-        in_resume = bool(re.search(rf'\b{re.escape(skill)}\b', resume_lower))
-        in_job_desc = bool(re.search(rf'\b{re.escape(skill)}\b', jd_lower))
+        skill_words = skill.split()
+        if len(skill_words) == 1:
+            in_resume = bool(re.search(rf'\b{re.escape(skill)}\b', resume_lower))
+            in_job_desc = bool(re.search(rf'\b{re.escape(skill)}\b', jd_lower))
+        else:
+            in_resume = all(word in resume_lower for word in skill_words)
+            in_job_desc = all(word in jd_lower for word in skill_words)
+            
         if in_resume and in_job_desc:
             matched_skills.append(skill)
         elif in_job_desc and not in_resume:
             missing_skills.append(skill)
             
-    # Also calculate missing important keywords
     job_words_raw = re.findall(r'[a-z0-9+#]+', jd_lower)
     resume_words_raw = re.findall(r'[a-z0-9+#]+', resume_lower)
     resume_words = set(w for w in resume_words_raw if w not in STOP_WORDS and len(w) > 2)
     job_words = set(w for w in job_words_raw if w not in STOP_WORDS and len(w) > 2)
     
-    # Sort missing words by length to get more meaningful ones, then take top 10
     missing_keywords = sorted(list(job_words - resume_words), key=len, reverse=True)[:10]
 
     return jsonify({
@@ -223,7 +240,6 @@ def ats_check():
     missing_skills = []
     missing_keywords = []
     
-    # 1. Parseability Check
     word_count = len(re.findall(r'\w+', resume_text))
     if word_count == 0:
         return jsonify({
@@ -236,7 +252,6 @@ def ats_check():
             "message": "Failed to extract text."
         })
         
-    # 2. Length & Word Count
     if word_count < 300:
         score -= 25
         missing_skills.append("Sufficient Content Length (>300 words)")
@@ -244,7 +259,6 @@ def ats_check():
         score -= 15
         missing_skills.append("Concise Formatting (Reduce word count)")
         
-    # 3. Contact Information
     if not email:
         score -= 10
         missing_skills.append("Email Address")
@@ -255,7 +269,6 @@ def ats_check():
         score -= 5
         missing_skills.append("LinkedIn Profile URL")
         
-    # 4. Standard ATS Sections
     sections = {
         "Experience / Work History": ["experience", "employment", "work history", "professional experience", "history"],
         "Education": ["education", "academic", "degree", "university", "college", "school"],
@@ -267,14 +280,11 @@ def ats_check():
             score -= 15
             missing_skills.append(f"{section_name} Section")
             
-    # 5. Quantifiable Metrics (Crucial for high ATS scoring)
-    # Looks for percentages, dollar signs, or digits
     metrics_count = len(re.findall(r'\d+%|\$\d+|\b\d+\b', resume_text))
     if metrics_count < 5:
         score -= 15
         missing_keywords.append("Measurable Results & Metrics (e.g. increased sales by 20%)")
             
-    # 6. Strong Action Verbs
     action_verbs = [
         "developed", "managed", "led", "created", "designed", "improved", 
         "increased", "built", "implemented", "achieved", "orchestrated", 
@@ -287,7 +297,6 @@ def ats_check():
 
     score = max(0, min(score, 100))
     
-    # Update Analytics
     day_name = datetime.now().strftime("%a")
     analytics_data["total_candidates"] += 1
     analytics_data["total_analyses"] += 1
@@ -322,7 +331,8 @@ def get_analytics():
 
 @app.route("/ping", methods=["POST"])
 def ping_user():
-    data = request.get_json()
+    # FIX: guard against missing/non-JSON body
+    data = request.get_json(silent=True) or {}
     email = data.get("email")
     name = data.get("name")
     if email and name:
@@ -337,7 +347,6 @@ def get_active_users():
     current_time = time.time()
     online_users = []
     for email, info in list(active_users.items()):
-        # Consider online if pinged within the last 30 seconds
         if current_time - info["last_ping"] < 30:
             online_users.append({
                 "email": email,
@@ -345,15 +354,15 @@ def get_active_users():
                 "status": "online"
             })
         else:
-            # Cleanup old users to save memory
             del active_users[email]
     return jsonify(online_users)
 
 @app.route("/chat/send", methods=["POST"])
 def send_chat():
-    data = request.get_json()
-    sender = data.get("sender") # "admin" or user_email
-    target_user = data.get("target_user") # user_email (who the chat belongs to)
+    # FIX: guard against missing/non-JSON body
+    data = request.get_json(silent=True) or {}
+    sender = data.get("sender")
+    target_user = data.get("target_user")
     text = data.get("text")
     
     if not target_user:
@@ -377,7 +386,6 @@ def get_messages():
 
 @app.route("/chat/conversations", methods=["GET"])
 def get_conversations():
-    # Return a summary of all conversations for the admin
     summaries = []
     for user_email, messages in chat_conversations.items():
         if messages:
@@ -388,18 +396,18 @@ def get_conversations():
                 "name": user_name,
                 "last_message": last_message["text"],
                 "time": last_message["time"],
-                "unread": last_message["sender"] == "user" # Simple unread logic
+                "unread": last_message["sender"] == "user"
             })
     return jsonify(summaries)
 
 @app.route("/share", methods=["POST"])
 def share_resume():
-    data = request.get_json()
+    # FIX: guard against missing/non-JSON body
+    data = request.get_json(silent=True) or {}
     email = data.get("email")
     if not email:
         return jsonify({"success": False, "error": "Email is required"}), 400
         
-    # Simulate sending an email by sleeping slightly
     time.sleep(1)
     
     return jsonify({

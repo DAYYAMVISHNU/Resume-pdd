@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomNav } from '../../components/layout/BottomNav';
 import { Card } from '../../components/ui/Card';
+import { getApiUrl } from '../../config/ApiConfig';
 import {
   BarChart,
   Bar,
@@ -35,7 +36,7 @@ export const AnalyticsDashboard = () => {
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const response = await fetch(`/analytics`);
+        const response = await fetch(getApiUrl('/analytics'));
         if (response.ok) {
           const data = await response.json();
           const volumeData = Object.keys(data.volume_by_day).map(key => ({

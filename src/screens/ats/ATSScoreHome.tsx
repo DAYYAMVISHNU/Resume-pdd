@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BottomNav } from '../../components/layout/BottomNav';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { CheckCircle, ShieldAlert, FileText, ArrowRight } from 'lucide-react';
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const ATSScoreHome = () => {
   const navigate = useNavigate();
   const [recentChecks, setRecentChecks] = React.useState<any[]>([]);
@@ -11,7 +13,7 @@ export const ATSScoreHome = () => {
   React.useEffect(() => {
     const fetchAnalyses = async () => {
       try {
-        const response = await fetch(`/analytics`);
+        const response = await fetch(getApiUrl('/analytics'));
         if (response.ok) {
           const data = await response.json();
           // Filter for ATS compatibility checks or just take all recent analyses

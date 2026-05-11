@@ -4,6 +4,8 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { MessageCircle, Mail, ChevronDown, X, Send, ArrowLeft } from 'lucide-react';
 
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const HelpSupport = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
@@ -47,10 +49,10 @@ export const HelpSupport = () => {
     const fetchChatData = async () => {
       try {
         if (isAdmin && !activeConversationEmail) {
-          const res = await fetch(`/chat/conversations`);
+          const res = await fetch(getApiUrl('/chat/conversations'));
           if (res.ok) setConversations(await res.json());
         } else if (activeConversationEmail) {
-          const res = await fetch(`/chat/messages?email=${activeConversationEmail}`);
+          const res = await fetch(getApiUrl(`/chat/messages?email=${activeConversationEmail}`));
           if (res.ok) setChatHistory(await res.json());
         }
       } catch (e) {
@@ -73,7 +75,7 @@ export const HelpSupport = () => {
     setChatMessage('');
 
     try {
-      await fetch(`/chat/send`, {
+      await fetch(getApiUrl('/chat/send'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

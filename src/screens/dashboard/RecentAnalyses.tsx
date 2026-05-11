@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { BottomNav } from '../../components/layout/BottomNav';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Search, Filter, FileText, MoreVertical } from 'lucide-react';
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const RecentAnalyses = () => {
   const navigate = useNavigate();
-  const [analyses, setAnalyses] = React.useState<any[]>([]);
+  const [analyses, setAnalyses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchAnalyses = async () => {
       try {
-        const response = await fetch(`/analytics`);
+        const response = await fetch(getApiUrl('/analytics'));
         if (response.ok) {
           const data = await response.json();
           setAnalyses(data.recent_analyses || []);
         }
       } catch (err) {
         console.error("Failed to fetch analyses", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchAnalyses();

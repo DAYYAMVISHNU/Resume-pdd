@@ -5,13 +5,15 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { User, Activity, Clock } from 'lucide-react';
 
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const ActiveUsers = () => {
   const [activeUsers, setActiveUsers] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`/active_users`);
+        const response = await fetch(getApiUrl('/active_users'));
         if (response.ok) {
           const data = await response.json();
           const mappedData = data.map((u: any, idx: number) => ({

@@ -123,11 +123,11 @@ export const CandidateScoreCard = () => {
           <Card
             hoverable
             padding="sm"
-            onClick={() => navigate('/ranking/experience')}
+            onClick={() => navigate('/ranking/similarity')}
             className="flex items-center justify-between p-4">
             
             <span className="text-sm font-semibold text-gray-900">
-              Exp. Timeline
+              Similarity Analysis
             </span>
             <ChevronRight size={18} className="text-gray-400" />
           </Card>

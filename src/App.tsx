@@ -72,6 +72,8 @@ import { ActiveUsers } from './screens/admin/ActiveUsers';
 // Placeholder for unbuilt screens
 import { PlaceholderScreen } from './components/layout/PlaceholderScreen';
 
+import { getApiUrl } from './config/ApiConfig';
+
 export function App() {
   useEffect(() => {
     const pingBackend = async () => {
@@ -79,7 +81,7 @@ export function App() {
       const userName = localStorage.getItem('userName');
       if (userEmail && userName) {
         try {
-          await fetch(`/ping`, {
+          await fetch(getApiUrl('/ping'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: userEmail, name: userName })

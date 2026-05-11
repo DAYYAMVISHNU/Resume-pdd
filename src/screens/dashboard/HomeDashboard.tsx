@@ -24,7 +24,7 @@ export const HomeDashboard = () => {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch(`/analytics`);
+        const response = await fetch(getApiUrl('/analytics'));
         if (response.ok) {
           const data = await response.json();
           let avgScore = 0;

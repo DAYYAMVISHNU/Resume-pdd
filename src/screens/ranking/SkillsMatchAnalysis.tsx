@@ -3,6 +3,7 @@ import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Check, X, Plus } from 'lucide-react';
+
 export const SkillsMatchAnalysis = () => {
   return (
     <div className="min-h-screen bg-gray-50">

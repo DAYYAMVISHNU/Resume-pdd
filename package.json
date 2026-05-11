@@ -8,10 +8,16 @@
     "backend": "cd backend && ..\\.venv\\Scripts\\python.exe app.py",
     "start": "concurrently \"npm run dev\" \"npm run backend\"",
     "build": "npx vite build",
+    "sync-android": "npm run build && npx cap sync android",
+    "flutter-run": "cd mobile_flutter && flutter run",
+    "open-android": "npx cap open android",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "preview": "npx vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.3",
+    "@capacitor/cli": "^8.3.3",
+    "@capacitor/core": "^8.3.3",
     "@emotion/react": "^11.13.3",
     "framer-motion": "^11.5.4",
     "jspdf": "^4.2.1",
