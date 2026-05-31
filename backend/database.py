@@ -5,7 +5,9 @@ import hashlib
 import time
 from datetime import datetime
 
-DATABASE_FILE = os.path.join(os.path.dirname(__file__), "ats_analyzer.db")
+# Vercel serverless: only /tmp/ is writable. Locally, use the file next to this script.
+_IS_VERCEL = os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV') is not None
+DATABASE_FILE = '/tmp/ats_analyzer.db' if _IS_VERCEL else os.path.join(os.path.dirname(__file__), "ats_analyzer.db")
 
 def get_db_connection():
     conn = sqlite3.connect(DATABASE_FILE)
