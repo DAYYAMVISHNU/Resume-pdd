@@ -8,27 +8,32 @@ import {
   HelpCircle,
   Info,
   ChevronRight,
-  LogOut } from
-'lucide-react';
+  LogOut,
+  Moon,
+  Sun
+} from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
+
 export const ProfilePage = () => {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const menuItems = [
-  {
-    icon: Settings,
-    label: 'Account Settings',
-    path: '/settings'
-  },
-
-  {
-    icon: HelpCircle,
-    label: 'Help & Support',
-    path: '/help'
-  },
-  {
-    icon: Info,
-    label: 'About & Legal',
-    path: '/about'
-  }];
+    {
+      icon: Settings,
+      label: 'Account Settings',
+      path: '/settings'
+    },
+    {
+      icon: HelpCircle,
+      label: 'Help & Support',
+      path: '/help'
+    },
+    {
+      icon: Info,
+      label: 'About & Legal',
+      path: '/about'
+    }
+  ];
 
   const userName = localStorage.getItem('userName') || 'Demo User';
   const initials = userName.split(' ').map((n: string) => n[0]).join('').substring(0, 2).toUpperCase();
@@ -78,6 +83,26 @@ export const ProfilePage = () => {
             </Card>);
 
         })}
+
+        <Card
+          hoverable
+          padding="sm"
+          onClick={toggleTheme}
+          className="flex items-center justify-between p-4 mt-2">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mr-4">
+              {theme === 'dark' ? <Sun size={20} className="text-indigo-600" /> : <Moon size={20} className="text-indigo-600" />}
+            </div>
+            <span className="font-semibold text-gray-900">
+              {theme === 'dark' ? 'Light Theme Mode' : 'Dark Theme Mode'}
+            </span>
+          </div>
+          <div className="w-10 h-6 bg-slate-200 rounded-full p-0.5 flex items-center cursor-pointer justify-start dark:bg-indigo-600 relative">
+            <div 
+              className={`w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 ${theme === 'dark' ? 'translate-x-4' : 'translate-x-0'}`} 
+            />
+          </div>
+        </Card>
 
         <Card
           hoverable

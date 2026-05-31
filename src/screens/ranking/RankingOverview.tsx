@@ -16,7 +16,9 @@ export const RankingOverview = () => {
     if (saved) {
       try {
         candidates = JSON.parse(saved);
-      } catch(e) {}
+      } catch(e) {
+        console.warn("Failed to parse saved candidates", e);
+      }
     }
   }
 
@@ -140,6 +142,16 @@ export const RankingOverview = () => {
             </Button>
           </div>
         )}
+
+        <div className="mt-4 pb-12">
+          <Button
+            fullWidth
+            variant="outline"
+            onClick={() => navigate('/home')}
+            className="border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold shadow-sm">
+            Return to Home Dashboard
+          </Button>
+        </div>
       </div>
     </div>
   );

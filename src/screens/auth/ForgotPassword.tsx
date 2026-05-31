@@ -1,17 +1,48 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Mail, CheckCircle } from 'lucide-react';
 import { SubPageHeader } from '../../components/layout/SubPageHeader';
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const ForgotPassword = () => {
+  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => {
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(getApiUrl('/api/forgot-password'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        setIsSubmitted(true);
+      } else {
+        setError(result.error || 'Password reset request failed');
+      }
+    } catch (err) {
+      setError('Connection to backend failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <SubPageHeader title="Reset Password" />
+      <SubPageHeader title="Reset Password" onBack={() => navigate('/login')} />
 
       <div className="flex-1 flex flex-col px-6 pt-8">
         {!isSubmitted ?
@@ -46,13 +77,21 @@ export const ForgotPassword = () => {
                   type="email"
                   className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required />
                 
                 </div>
               </div>
 
-              <Button fullWidth size="lg" type="submit">
-                Send Reset Link
+              {error && (
+                <div className="p-3 bg-red-50 text-red-600 text-sm rounded-xl font-medium">
+                  {error}
+                </div>
+              )}
+
+              <Button fullWidth size="lg" type="submit" disabled={isLoading}>
+                {isLoading ? 'Sending...' : 'Send Reset Link'}
               </Button>
             </form>
           </motion.div> :

@@ -57,17 +57,17 @@ export const CandidateScoreCard = () => {
 
             <div className="flex justify-center gap-3 mb-4">
               <button 
-                onClick={() => navigate('/resume/1/contact', { state: { candidate } })}
+                onClick={() => navigate(`/resume/${candidate.id}/contact`, { state: { candidate } })}
                 className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
                 <Mail size={18} />
               </button>
               <button 
-                onClick={() => navigate('/resume/1/contact', { state: { candidate } })}
+                onClick={() => navigate(`/resume/${candidate.id}/contact`, { state: { candidate } })}
                 className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
                 <Phone size={18} />
               </button>
               <button
-                onClick={() => navigate('/resume/1', { state: { candidate } })}
+                onClick={() => navigate(`/resume/${candidate.id}`, { state: { candidate } })}
                 className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 hover:bg-indigo-100">
                 
                 <FileText size={18} />

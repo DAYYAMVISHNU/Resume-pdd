@@ -15,7 +15,11 @@ export const RecentAnalyses = () => {
   useEffect(() => {
     const fetchAnalyses = async () => {
       try {
-        const response = await fetch(getApiUrl('/analytics'));
+        const response = await fetch(getApiUrl('/analytics'), {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+          }
+        });
         if (response.ok) {
           const data = await response.json();
           setAnalyses(data.recent_analyses || []);

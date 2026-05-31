@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 final InAppLocalhostServer localhostServer = InAppLocalhostServer(documentRoot: 'assets/web');
 
@@ -67,9 +70,26 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   allowFileAccessFromFileURLs: true,
                   allowUniversalAccessFromFileURLs: true,
                   mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+                  clearCache: true,
                 ),
                 onWebViewCreated: (controller) {
                   webViewController = controller;
+                  
+                  controller.addJavaScriptHandler(handlerName: 'downloadPdf', callback: (args) async {
+                    try {
+                      final String base64Str = args[0];
+                      final String filename = args[1];
+                      
+                      final bytes = base64Decode(base64Str);
+                      final dir = await getTemporaryDirectory();
+                      final file = File('${dir.path}/$filename');
+                      await file.writeAsBytes(bytes);
+                      
+                      await Share.shareXFiles([XFile(file.path)], text: 'Here is the generated resume report');
+                    } catch (e) {
+                      debugPrint('Error sharing PDF: $e');
+                    }
+                  });
                 },
                 onLoadStart: (controller, url) {
                   setState(() {

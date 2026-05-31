@@ -131,6 +131,17 @@ export const ATSScoreResults = () => {
             )}
           </ul>
         </Card>
+
+        <div className="pt-4 pb-8">
+          <Button 
+            fullWidth 
+            variant="outline" 
+            size="lg" 
+            onClick={() => navigate('/home')}
+            className="border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold shadow-sm">
+            Return to Home Dashboard
+          </Button>
+        </div>
       </div>
     </div>
   );

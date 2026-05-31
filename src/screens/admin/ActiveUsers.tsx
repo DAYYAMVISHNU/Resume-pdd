@@ -5,7 +5,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { User, Activity, Clock } from 'lucide-react';
 
-import { getApiUrl } from '../../config/ApiConfig';
+import { getApiUrl, getAuthHeaders } from '../../config/ApiConfig';
 
 export const ActiveUsers = () => {
   const [activeUsers, setActiveUsers] = useState<any[]>([]);
@@ -13,7 +13,9 @@ export const ActiveUsers = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(getApiUrl('/active_users'));
+        const response = await fetch(getApiUrl('/active_users'), {
+          headers: getAuthHeaders()
+        });
         if (response.ok) {
           const data = await response.json();
           const mappedData = data.map((u: any, idx: number) => ({

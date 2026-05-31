@@ -41,6 +41,7 @@ export const ATSUploadResume = () => {
       const data = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", getApiUrl('/ats_check'), true);
+        xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('token') || ''}`);
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
             try {
@@ -70,7 +71,7 @@ export const ATSUploadResume = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <SubPageHeader title="Upload for ATS" />
+      <SubPageHeader title="Upload for ATS" onBack={() => navigate('/new-analysis')} />
 
       <div className="flex-1 p-4 flex flex-col justify-center">
         {isAnalyzing ? (

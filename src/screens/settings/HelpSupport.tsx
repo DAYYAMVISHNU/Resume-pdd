@@ -4,7 +4,7 @@ import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { MessageCircle, Mail, ChevronDown, X, Send, ArrowLeft } from 'lucide-react';
 
-import { getApiUrl } from '../../config/ApiConfig';
+import { getApiUrl, getAuthHeaders } from '../../config/ApiConfig';
 
 export const HelpSupport = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -49,10 +49,14 @@ export const HelpSupport = () => {
     const fetchChatData = async () => {
       try {
         if (isAdmin && !activeConversationEmail) {
-          const res = await fetch(getApiUrl('/chat/conversations'));
+          const res = await fetch(getApiUrl('/chat/conversations'), {
+            headers: getAuthHeaders()
+          });
           if (res.ok) setConversations(await res.json());
         } else if (activeConversationEmail) {
-          const res = await fetch(getApiUrl(`/chat/messages?email=${activeConversationEmail}`));
+          const res = await fetch(getApiUrl(`/chat/messages?email=${activeConversationEmail}`), {
+            headers: getAuthHeaders()
+          });
           if (res.ok) setChatHistory(await res.json());
         }
       } catch (e) {
@@ -77,7 +81,7 @@ export const HelpSupport = () => {
     try {
       await fetch(getApiUrl('/chat/send'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           sender: isAdmin ? 'admin' : currentUserEmail,
           target_user: activeConversationEmail,

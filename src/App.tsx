@@ -73,22 +73,26 @@ import { ActiveUsers } from './screens/admin/ActiveUsers';
 import { PlaceholderScreen } from './components/layout/PlaceholderScreen';
 
 import { getApiUrl } from './config/ApiConfig';
+import { ThemeProvider } from './context/ThemeContext';
 
 export function App() {
   useEffect(() => {
     const pingBackend = async () => {
       const userEmail = localStorage.getItem('userEmail');
       const userName = localStorage.getItem('userName');
-      if (userEmail && userName) {
-        try {
+      try {
+        if (userEmail && userName) {
           await fetch(getApiUrl('/ping'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: userEmail, name: userName })
           });
-        } catch (e) {
-          console.error("Failed to ping server", e);
+        } else {
+          // Send a basic wakeup request if not logged in
+          await fetch(getApiUrl('/'));
         }
+      } catch (e) {
+        console.error("Failed to ping server", e);
       }
     };
 
@@ -98,9 +102,10 @@ export function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="app-container">
-        <AnimatePresence mode="wait">
+    <ThemeProvider>
+      <Router>
+        <div className="app-container">
+          <AnimatePresence mode="wait">
           <Routes>
             {/* Auth & Onboarding */}
             <Route path="/" element={<SplashScreen />} />
@@ -214,6 +219,7 @@ export function App() {
           </Routes>
         </AnimatePresence>
       </div>
-    </Router>);
+    </Router>
+  </ThemeProvider>);
 
 }

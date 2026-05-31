@@ -15,7 +15,7 @@ export const SubPageHeader = ({
   const handleBack = () => {
     if (onBack) {
       onBack();
-    } else if (window.history.state && window.history.state.idx > 0) {
+    } else if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate('/home');

@@ -39,7 +39,7 @@ export const UploadResumes = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <SubPageHeader title="Upload Resumes" />
+      <SubPageHeader title="Upload Resumes" onBack={() => navigate(-1)} />
 
       <div className="flex-1 p-4 flex flex-col">
         <div className="mb-6">
@@ -125,7 +125,7 @@ export const UploadResumes = () => {
         )}
       </div>
 
-      <div className="p-4 bg-white border-t border-gray-100">
+      <div className="p-4 bg-white border-t border-gray-100 space-y-2">
         <Button 
           fullWidth 
           size="lg" 
@@ -133,6 +133,15 @@ export const UploadResumes = () => {
           onClick={() => navigate('/upload/progress', { state: { files, jdText } })}
         >
           Continue with {files.length} file{files.length !== 1 ? 's' : ''}
+        </Button>
+        <Button 
+          fullWidth 
+          variant="outline" 
+          size="lg" 
+          onClick={() => navigate('/home')}
+          className="border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold"
+        >
+          Return to Home Screen
         </Button>
       </div>
     </div>

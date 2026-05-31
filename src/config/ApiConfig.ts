@@ -1,7 +1,30 @@
-// Backend is deployed on Render. This URL works for both the web app and Android app.
-export const API_BASE_URL = 'https://resume-backend-v38r.onrender.com';
+const isNative = 
+  window.location.protocol === 'file:' || 
+  window.location.protocol === 'capacitor:' || 
+  (window.location.hostname === 'localhost' && window.location.port === '') ||
+  !!(window as any).Capacitor;
+
+export const API_BASE_URL = isNative
+  ? 'https://29752835-0400-467d-9963-386d7b517de.vercel.app'
+  : '';
 
 export const getApiUrl = (endpoint: string) => {
   const formattedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   return `${API_BASE_URL}${formattedEndpoint}`;
 };
+
+export const getAuthHeaders = () => {
+  const token = localStorage.getItem('token') || '';
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': token ? `Bearer ${token}` : ''
+  };
+};
+
+export const getAuthUploadHeaders = () => {
+  const token = localStorage.getItem('token') || '';
+  return {
+    'Authorization': token ? `Bearer ${token}` : ''
+  };
+};
+

@@ -5,13 +5,13 @@ import { BottomNav } from '../../components/layout/BottomNav';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import {
-  Bell,
   Plus,
   FileText,
   Users,
   CheckCircle,
   ChevronRight } from
 'lucide-react';
+import { getApiUrl, getAuthHeaders } from '../../config/ApiConfig';
 export const HomeDashboard = () => {
   const navigate = useNavigate();
   const [recentActivity, setRecentActivity] = React.useState<any[]>([]);
@@ -24,7 +24,9 @@ export const HomeDashboard = () => {
   React.useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch(getApiUrl('/analytics'));
+        const response = await fetch(getApiUrl('/analytics'), {
+          headers: getAuthHeaders()
+        });
         if (response.ok) {
           const data = await response.json();
           let avgScore = 0;
@@ -93,13 +95,6 @@ export const HomeDashboard = () => {
             </p>
             <h1 className="text-2xl font-bold text-white">{userName}</h1>
           </div>
-          <button
-            onClick={() => navigate('/notifications')}
-            className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white relative">
-            
-            <Bell size={20} />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-400 rounded-full border-2 border-indigo-600"></span>
-          </button>
         </div>
 
         <Card

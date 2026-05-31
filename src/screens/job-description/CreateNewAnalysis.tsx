@@ -8,7 +8,7 @@ export const CreateNewAnalysis = () => {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <SubPageHeader title="New Analysis" />
+      <SubPageHeader title="New Analysis" onBack={() => navigate('/home')} />
 
       <div className="flex-1 p-6 flex flex-col justify-center space-y-6">
         <motion.div

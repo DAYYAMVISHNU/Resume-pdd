@@ -1,8 +1,21 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { Card } from '../../components/ui/Card';
 import { GraduationCap, Calendar, MapPin } from 'lucide-react';
+
 export const EducationDetails = () => {
+  const location = useLocation();
+  const candidate = location.state?.candidate || {
+    name: 'Sarah Smith'
+  };
+
+  const isDemo = candidate.name.includes('Sarah Smith');
+  const degree = isDemo ? 'Bachelor of Science in Computer Science' : 'Bachelor of Technology in Computer Science';
+  const school = isDemo ? 'University of Technology' : 'National Institute of Technology';
+  const period = isDemo ? 'Sept 2013 - May 2017' : 'Aug 2016 - May 2020';
+  const locationText = isDemo ? 'San Jose, CA' : 'Chicago, IL';
+
   return (
     <div className="min-h-screen bg-gray-50">
       <SubPageHeader title="Education" />
@@ -15,10 +28,10 @@ export const EducationDetails = () => {
             </div>
             <div>
               <h3 className="font-bold text-gray-900 text-lg leading-tight mb-1">
-                Bachelor of Science in Computer Science
+                {degree}
               </h3>
               <p className="text-sm font-medium text-indigo-600">
-                University of Technology
+                {school}
               </p>
             </div>
           </div>
@@ -26,11 +39,11 @@ export const EducationDetails = () => {
           <div className="space-y-2 text-sm text-gray-600 mb-4">
             <div className="flex items-center">
               <Calendar size={16} className="mr-2 text-gray-400" />
-              <span>Sept 2013 - May 2017</span>
+              <span>{period}</span>
             </div>
             <div className="flex items-center">
               <MapPin size={16} className="mr-2 text-gray-400" />
-              <span>San Jose, CA</span>
+              <span>{locationText}</span>
             </div>
           </div>
 
@@ -42,6 +55,6 @@ export const EducationDetails = () => {
           </div>
         </Card>
       </div>
-    </div>);
-
+    </div>
+  );
 };

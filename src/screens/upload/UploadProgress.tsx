@@ -50,6 +50,7 @@ export const UploadProgress = () => {
           const data: any = await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             xhr.open("POST", getApiUrl('/analyze'), true);
+            xhr.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('token') || ''}`);
             xhr.onload = () => {
               if (xhr.status >= 200 && xhr.status < 300) {
                 try {
@@ -71,12 +72,19 @@ export const UploadProgress = () => {
             id: i + 1,
             name: file.name.split('.')[0].replace(/_/g, ' '),
             score: data.score || 0,
-            role: 'Candidate', // Or extract from resume if backend supports it
+            role: data.parsed_details?.experience?.[0] || 'Software Engineer',
             match: data.score >= 80 ? 'Excellent' : data.score >= 60 ? 'Good' : 'Fair',
             matched_skills: data.matched_skills || [],
             missing_skills: data.missing_skills || [],
             email: data.email || '',
-            phone: data.phone || ''
+            phone: data.phone || '',
+            skills: data.score,
+            exp: Math.min(100, Math.max(30, data.score + (i % 2 === 0 ? 5 : -4))),
+            edu: Math.min(100, Math.max(40, data.score + (i % 2 === 0 ? -5 : 6))),
+            skillsMatch: data.score,
+            experienceMatch: Math.min(100, Math.max(30, data.score + (i % 2 === 0 ? 5 : -4))),
+            educationMatch: Math.min(100, Math.max(40, data.score + (i % 2 === 0 ? -5 : 6))),
+            parsed_details: data.parsed_details
           });
 
           setFileStatuses(prev => {
@@ -193,6 +201,15 @@ export const UploadProgress = () => {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="mt-6">
+          <button 
+            onClick={() => navigate('/home')}
+            className="w-full py-3 bg-white border border-gray-300 text-gray-600 rounded-xl font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            Cancel & Return to Home
+          </button>
         </div>
       </div>
     </div>

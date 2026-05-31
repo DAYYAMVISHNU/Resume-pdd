@@ -1,10 +1,11 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+import { motion, HTMLMotionProps } from 'framer-motion';
+interface ButtonProps extends HTMLMotionProps<'button'> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   icon?: React.ReactNode;
+  children?: React.ReactNode;
 }
 export const Button = ({
   children,

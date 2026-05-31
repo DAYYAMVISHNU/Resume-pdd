@@ -4,19 +4,55 @@ import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Mail, Lock, User, Chrome } from 'lucide-react';
 import { SubPageHeader } from '../../components/layout/SubPageHeader';
+import { getApiUrl } from '../../config/ApiConfig';
+
 export const SignUpScreen = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const handleSignUp = (e: React.FormEvent) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setIsLoading(true);
-    setTimeout(() => {
-      navigate('/home');
-    }, 1000);
+
+    try {
+      const response = await fetch(getApiUrl('/api/register'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('userName', name);
+        localStorage.setItem('userEmail', email.toLowerCase());
+        if (email.toLowerCase() === 'lvishnu181@gmail.com') {
+          localStorage.setItem('isAdmin', 'true');
+        } else {
+          localStorage.removeItem('isAdmin');
+        }
+        navigate('/home');
+      } else {
+        setError(result.error || 'Registration failed');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Connection to backend failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <SubPageHeader title="" />
+      <SubPageHeader title="" onBack={() => navigate('/login')} />
 
       <div className="flex-1 flex flex-col px-6 pb-6">
         <motion.div
@@ -63,6 +99,8 @@ export const SignUpScreen = () => {
                 type="text"
                 className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                 placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required />
               
             </div>
@@ -80,6 +118,8 @@ export const SignUpScreen = () => {
                 type="email"
                 className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required />
               
             </div>
@@ -97,6 +137,8 @@ export const SignUpScreen = () => {
                 type="password"
                 className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                 placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required />
               
             </div>
@@ -130,6 +172,12 @@ export const SignUpScreen = () => {
               </label>
             </div>
           </div>
+
+          {error && (
+            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-xl font-medium">
+              {error}
+            </div>
+          )}
 
           <Button
             fullWidth
