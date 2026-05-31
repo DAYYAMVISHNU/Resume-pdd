@@ -1,12 +1,10 @@
 const isNative = 
   window.location.protocol === 'file:' || 
   window.location.protocol === 'capacitor:' || 
-  (window.location.hostname === 'localhost' && window.location.port === '') ||
+  window.location.hostname === 'localhost' ||
   !!(window as any).Capacitor;
 
-export const API_BASE_URL = isNative
-  ? 'https://29752835-0400-467d-9963-386d7b517de.vercel.app'
-  : '';
+export const API_BASE_URL = 'https://resume-analyzer-backend.onrender.com';
 
 export const getApiUrl = (endpoint: string) => {
   const formattedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
