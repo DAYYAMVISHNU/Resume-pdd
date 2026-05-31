@@ -7,6 +7,8 @@ import base64
 import json
 import hashlib
 import hmac
+import threading
+import urllib.request
 from functools import wraps
 from datetime import datetime
 
@@ -334,6 +336,10 @@ def calculate_ats_similarity(resume_text, job_desc):
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"message": "Production ATS Resume Analyzer REST backend is running successfully", "status": "secure"})
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok", "timestamp": time.time()})
 
 @app.route("/api/register", methods=["POST"])
 def register_user():
@@ -731,6 +737,25 @@ def share_resume(current_user):
         "message": f"Perfect ATS optimized resume successfully shared with {email}"
     })
 
+def keep_alive():
+    """Pings the server every 10 minutes to prevent Render free tier spin-down."""
+    # Wait for app to fully start
+    time.sleep(30)
+    render_url = os.environ.get("RENDER_EXTERNAL_URL", "")
+    if not render_url:
+        return  # Only run on Render deployment
+    ping_url = f"{render_url}/health"
+    while True:
+        try:
+            urllib.request.urlopen(ping_url, timeout=10)
+            print(f"[keep-alive] Pinged {ping_url}")
+        except Exception as e:
+            print(f"[keep-alive] Ping failed: {e}")
+        time.sleep(600)  # 10 minutes
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    # Start keep-alive thread for Render free tier
+    t = threading.Thread(target=keep_alive, daemon=True)
+    t.start()
     app.run(host="0.0.0.0", debug=False, port=port)

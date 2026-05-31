@@ -3,10 +3,12 @@ services:
     name: resume-analyzer-backend
     env: python
     buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && gunicorn --bind 0.0.0.0:$PORT app:app"
+    startCommand: "cd backend && gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 120 app:app"
     envVars:
       - key: PYTHON_VERSION
         value: 3.10.0
+      - key: RENDER_EXTERNAL_URL
+        value: https://resume-analyzer-backend.onrender.com
 
   - type: web
     name: resume-analyzer-frontend
