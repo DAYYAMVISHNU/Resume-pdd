@@ -1,17 +1,24 @@
-# mobile_flutter
+# Flutter Mobile App Wrapper
 
-A new Flutter project.
+This is the Flutter mobile application wrapper for the Resume Analyzer system. It serves the compiled React web application offline using a local web server (`InAppLocalhostServer`) and encapsulates it inside a WebView with custom hooks.
 
-## Getting Started
+## Syncing Web Assets
 
-This project is a starting point for a Flutter application.
+Before building or running the Flutter app, you must sync the latest built assets from the frontend directory:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+# Run the sync script from the root workspace directory
+python sync_flutter.py
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+This script will compile the React frontend and copy all built assets directly to `mobile_flutter/assets/web/`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Running the App
+
+To run the Flutter app:
+
+```bash
+# From the mobile_flutter directory
+flutter pub get
+flutter run
+```
