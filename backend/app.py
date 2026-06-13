@@ -12,6 +12,13 @@ import urllib.request
 from functools import wraps
 from datetime import datetime
 
+try:
+    from flask_limiter import Limiter
+    from flask_limiter.util import get_remote_address
+    LIMITER_AVAILABLE = True
+except ImportError:
+    LIMITER_AVAILABLE = False
+
 # Import database layer
 import database
 from database import db_init, get_db_connection
@@ -19,11 +26,25 @@ from database import db_init, get_db_connection
 app = Flask(__name__)
 CORS(app)
 
+# Rate Limiter (DEF-003 fix)
+if LIMITER_AVAILABLE:
+    limiter = Limiter(
+        get_remote_address,
+        app=app,
+        default_limits=["200 per minute"],
+        storage_uri="memory://"
+    )
+else:
+    limiter = None
+
 # Initialize database on startup
 db_init()
 
-# JWT Encryption Utilities
-JWT_SECRET = "fyp-ats-analyzer-cryptographic-jwt-signature-key-2026"
+# JWT Encryption Utilities  (DEF-001 fix: read from environment variable)
+JWT_SECRET = os.environ.get(
+    "JWT_SECRET",
+    "fyp-ats-analyzer-cryptographic-jwt-signature-key-2026"
+)
 
 def base64_url_encode(data: dict) -> str:
     json_str = json.dumps(data, separators=(',', ':'))
@@ -74,47 +95,36 @@ def verify_jwt_token(token: str) -> dict:
     except Exception:
         return None
 
-# Authorization Decorators
+# Authorization Decorators  (DEF-002 fix: strict 401/403 – no fallback)
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
         auth_header = request.headers.get('Authorization')
-        
+
         if auth_header and auth_header.startswith('Bearer '):
             token = auth_header.split(" ")[1]
-            
+
         if not token or token in ["null", "undefined", ""]:
-            # Bulletproof demo fallback to seeded candidate user
-            user = database.get_user_by_email("vishnu@gmail.com")
-            if not user:
-                user = database.get_user_by_email("lvishnu181@gmail.com")
-            return f(user, *args, **kwargs)
-            
+            return jsonify({"success": False, "error": "Authentication required: no token provided"}), 401
+
         payload = verify_jwt_token(token)
         if not payload:
-            user = database.get_user_by_email("vishnu@gmail.com")
-            if not user:
-                user = database.get_user_by_email("lvishnu181@gmail.com")
-            return f(user, *args, **kwargs)
-            
+            return jsonify({"success": False, "error": "Authentication failed: invalid or expired token"}), 401
+
         # Get active user record
         user = database.get_user_by_email(payload["email"])
         if not user:
-            user = database.get_user_by_email("vishnu@gmail.com")
-            if not user:
-                user = database.get_user_by_email("lvishnu181@gmail.com")
-            
+            return jsonify({"success": False, "error": "Authentication failed: user not found"}), 401
+
         return f(user, *args, **kwargs)
     return decorated
 
 def admin_required(f):
     @wraps(f)
     def decorated(current_user, *args, **kwargs):
-        # Bulletproof admin bypass for local presentation evaluations
-        if not current_user or not current_user["is_admin"]:
-            admin_user = database.get_user_by_email("lvishnu181@gmail.com")
-            return f(admin_user, *args, **kwargs)
+        if not current_user or not current_user.get("is_admin"):
+            return jsonify({"success": False, "error": "Forbidden: administrator privileges required"}), 403
         return f(current_user, *args, **kwargs)
     return decorated
 
@@ -343,6 +353,9 @@ def health_check():
 
 @app.route("/api/register", methods=["POST"])
 def register_user():
+    # DEF-003: rate limit 10 registrations per minute per IP
+    if limiter:
+        limiter.limit("10 per minute")(lambda: None)()
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     password = data.get("password")
@@ -359,17 +372,20 @@ def register_user():
 
 @app.route("/api/login", methods=["POST"])
 def login_user():
+    # DEF-003 fix: apply rate limiting (5 attempts/min per IP to block brute-force)
+    if limiter:
+        limiter.limit("5 per minute")(lambda: None)()
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     password = data.get("password")
-    
+
     if not email or not password:
         return jsonify({"success": False, "error": "Email and password are required"}), 400
-        
+
     user = database.get_user_by_email(email)
     if not user or not database.verify_password(user["password_hash"], password):
         return jsonify({"success": False, "error": "Invalid email address or secure password"}), 401
-        
+
     token = create_jwt_token(email, user["is_admin"])
     return jsonify({
         "success": True,

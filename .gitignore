@@ -24,3 +24,18 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Temporary files
+temp_output.txt
+

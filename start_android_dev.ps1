@@ -38,7 +38,7 @@ Start-Sleep -Seconds 2
 # ── 3. Start Vite dev server in a new window ─────────────────────────────────
 Write-Host "[3/4] Starting Vite dev server (port 5173)..." -ForegroundColor Yellow
 Start-Process powershell -ArgumentList "-NoExit", "-Command",
-    "Set-Location '$ProjectRoot'; npx vite --host"
+    "Set-Location '$ProjectRoot\frontend'; npx vite --host"
 Write-Host "      Vite dev server window opened." -ForegroundColor Green
 
 Start-Sleep -Seconds 3
