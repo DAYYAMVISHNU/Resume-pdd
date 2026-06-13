@@ -1,0 +1,13 @@
+{
+  "name": "resume-analyzer-selenium-tests",
+  "version": "1.0.0",
+  "description": "E2E Selenium tests for Resume Analyzer",
+  "main": "index.js",
+  "scripts": {
+    "login": "mocha tests/login.test.js --timeout 30000"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "selenium-webdriver": "^4.15.0"
+  }
+}

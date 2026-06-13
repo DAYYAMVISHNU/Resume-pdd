@@ -162,6 +162,7 @@ export const LoginScreen = () => {
                 <Mail size={20} className="text-gray-400" />
               </div>
               <input
+                id="email"
                 type="email"
                 className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                 placeholder="Enter your email"
@@ -179,6 +180,7 @@ export const LoginScreen = () => {
                 <Lock size={20} className="text-gray-400" />
               </div>
               <input
+                id="password"
                 type="password"
                 className="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all"
                 placeholder="••••••••"
@@ -200,7 +202,7 @@ export const LoginScreen = () => {
             </div>
           )}
 
-          <Button fullWidth size="lg" type="submit" disabled={isLoading} className="mt-6">
+          <Button id="login-button" fullWidth size="lg" type="submit" disabled={isLoading} className="mt-6">
             {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
         </motion.form>
