@@ -1,0 +1,109 @@
+{
+  "count": 13,
+  "endpoints": [
+    {
+      "path": "/",
+      "methods": [
+        "GET"
+      ],
+      "function": "health_check",
+      "requires": "none"
+    },
+    {
+      "path": "/api/register",
+      "methods": [
+        "POST"
+      ],
+      "function": "login_user",
+      "requires": "none"
+    },
+    {
+      "path": "/api/forgot-password",
+      "methods": [
+        "POST"
+      ],
+      "function": "analyze_resume",
+      "requires": "token"
+    },
+    {
+      "path": "/ats_check",
+      "methods": [
+        "POST"
+      ],
+      "function": "ats_check",
+      "requires": "token"
+    },
+    {
+      "path": "/api/rank",
+      "methods": [
+        "POST"
+      ],
+      "function": "rank_resumes",
+      "requires": "token"
+    },
+    {
+      "path": "/api/job-descriptions",
+      "methods": [
+        "POST"
+      ],
+      "function": "save_jd",
+      "requires": "token"
+    },
+    {
+      "path": "/api/job-descriptions",
+      "methods": [
+        "GET"
+      ],
+      "function": "get_jds",
+      "requires": "token"
+    },
+    {
+      "path": "/chat/send",
+      "methods": [
+        "POST"
+      ],
+      "function": "send_chat",
+      "requires": "token"
+    },
+    {
+      "path": "/chat/messages",
+      "methods": [
+        "GET"
+      ],
+      "function": "get_messages",
+      "requires": "token"
+    },
+    {
+      "path": "/chat/conversations",
+      "methods": [
+        "GET"
+      ],
+      "function": "get_conversations",
+      "requires": "admin"
+    },
+    {
+      "path": "/ping",
+      "methods": [
+        "POST"
+      ],
+      "function": "get_active_users",
+      "requires": "admin"
+    },
+    {
+      "path": "/analytics",
+      "methods": [
+        "GET"
+      ],
+      "function": "get_analytics",
+      "requires": "token"
+    },
+    {
+      "path": "/share",
+      "methods": [
+        "POST"
+      ],
+      "function": "share_resume",
+      "requires": "token"
+    }
+  ]
+}

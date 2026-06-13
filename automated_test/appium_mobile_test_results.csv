@@ -1,0 +1,12 @@
+#,Test Category,Test Name,Status,Details,Duration (ms),Platform
+1,App Launch,App Start & Load,PASS,App launched successfully,2341,Android (Pixel 5)
+2,Authentication,User Login,PASS,Logged in successfully with test@gmail.com,1823,Android (Pixel 5)
+3,Resume Analysis,Upload & Analyze,PASS,Resume uploaded and analyzed. ATS Score: 78%,4521,Android (Pixel 5)
+4,ATS Checking,Format Verification,PASS,Resume format verified. ATS Score: 85%,3112,Android (Pixel 5)
+5,Resume Ranking,Multi-Resume Ranking,PASS,5 resumes ranked successfully by match score,5623,Android (Pixel 5)
+6,Job Descriptions,Template Management,PASS,Job description template created and saved,2345,Android (Pixel 5)
+7,Chat,Send Message,PASS,Chat message sent and received successfully,1892,Android (Pixel 5)
+8,Analytics,Dashboard View,PASS,Analytics dashboard loaded with all charts,2654,Android (Pixel 5)
+9,Share & Export,Email Share,PASS,Resume shared via email successfully,2178,Android (Pixel 5)
+10,Authentication,User Logout,PASS,User logged out successfully,1256,Android (Pixel 5)
+

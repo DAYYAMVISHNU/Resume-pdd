@@ -1,0 +1,6 @@
+{
+  "baseUrl": "http://localhost:5000",
+  "user": "<user_token_here>",
+  "admin": "<admin_token_here>"
+}
+
