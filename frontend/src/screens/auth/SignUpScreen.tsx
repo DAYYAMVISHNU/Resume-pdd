@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Mail, Lock, User, Chrome } from 'lucide-react';
-import { SubPageHeader } from '../../components/layout/SubPageHeader';
 import { getApiUrl } from '../../config/ApiConfig';
 
 export const SignUpScreen = () => {
@@ -14,9 +13,36 @@ export const SignUpScreen = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const validateForm = () => {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+
+    // Allow any name with at least 1 character
+    if (trimmedName.length < 1) {
+      return 'Please enter your name';
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      return 'Please enter a valid email address';
+    }
+
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+
+    return '';
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -25,15 +51,19 @@ export const SignUpScreen = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          password,
+          name: name.trim(),
+        }),
       });
 
       const result = await response.json();
       if (response.ok && result.success) {
         localStorage.setItem('token', result.token);
-        localStorage.setItem('userName', name);
-        localStorage.setItem('userEmail', email.toLowerCase());
-        if (email.toLowerCase() === 'lvishnu181@gmail.com') {
+        localStorage.setItem('userName', name.trim());
+        localStorage.setItem('userEmail', email.trim().toLowerCase());
+        if (email.trim().toLowerCase() === 'lvishnu181@gmail.com') {
           localStorage.setItem('isAdmin', 'true');
         } else {
           localStorage.removeItem('isAdmin');
@@ -101,10 +131,17 @@ export const SignUpScreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <SubPageHeader title="" onBack={() => navigate('/login')} />
+    <div className="min-h-screen bg-white p-6 flex flex-col">
+      <button
+        type="button"
+        onClick={() => navigate('/login')}
+        className="-ml-2 mb-4 w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+        aria-label="Back to sign in"
+      >
+        <span aria-hidden="true" className="text-3xl leading-none">&lsaquo;</span>
+      </button>
 
-      <div className="flex-1 flex flex-col px-6 pb-6">
+      <div className="flex-1 flex flex-col">
         <motion.div
           initial={{
             opacity: 0,
@@ -114,7 +151,7 @@ export const SignUpScreen = () => {
             opacity: 1,
             y: 0
           }}
-          className="mb-8 mt-4">
+          className="mb-8">
           
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Create account

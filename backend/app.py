@@ -376,8 +376,9 @@ def register_user():
     name_clean = name.strip()
     email_clean = email.strip().lower()
 
-    if not re.match(r"^[A-Za-z][A-Za-z\s'.-]{1,}$", name_clean):
-        return jsonify({"success": False, "error": "Please enter a valid full name"}), 400
+    # Accept any non-empty name
+    if len(name_clean) < 1:
+        return jsonify({"success": False, "error": "Please enter your name"}), 400
 
     if not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email_clean):
         return jsonify({"success": False, "error": "Please enter a valid email address"}), 400
