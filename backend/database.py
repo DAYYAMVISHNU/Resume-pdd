@@ -290,8 +290,11 @@ def create_user(name, email, password, is_admin=False):
         conn.commit()
         user_id = cursor.lastrowid
         return {"success": True, "user_id": user_id}
-    except sqlite3.IntegrityError:
-        return {"success": False, "error": "Email address already registered"}
+    except Exception as e:
+        err_str = str(e).lower()
+        if "unique" in err_str or "duplicate" in err_str:
+            return {"success": False, "error": "Email address already registered"}
+        return {"success": False, "error": f"Database error: {str(e)}"}
     finally:
         conn.close()
 
