@@ -372,10 +372,22 @@ def register_user():
     
     if not email or not password or not name:
         return jsonify({"success": False, "error": "Name, email, and password are required credentials"}), 400
-        
-    res = database.create_user(name.strip(), email.strip().lower(), password)
+
+    name_clean = name.strip()
+    email_clean = email.strip().lower()
+
+    if not re.match(r"^[A-Za-z][A-Za-z\s'.-]{1,}$", name_clean):
+        return jsonify({"success": False, "error": "Please enter a valid full name"}), 400
+
+    if not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email_clean):
+        return jsonify({"success": False, "error": "Please enter a valid email address"}), 400
+
+    if len(password) < 8:
+        return jsonify({"success": False, "error": "Password must be at least 8 characters"}), 400
+
+    res = database.create_user(name_clean, email_clean, password)
     if res.get("success"):
-        token = create_jwt_token(email.strip().lower(), email.strip().lower() == "lvishnu181@gmail.com")
+        token = create_jwt_token(email_clean, email_clean == "lvishnu181@gmail.com")
         res["token"] = token
     return jsonify(res)
 
@@ -416,11 +428,13 @@ def login_user():
     if not password:
         return jsonify({"success": False, "error": "Password is required"}), 400
 
-    user = database.get_user_by_email(email)
+    # Always normalize to lowercase — registration stores as lowercase
+    email_clean = email.strip().lower()
+    user = database.get_user_by_email(email_clean)
     if not user or not database.verify_password(user["password_hash"], password):
-        return jsonify({"success": False, "error": "Invalid email address or secure password"}), 401
+        return jsonify({"success": False, "error": "Invalid email address or password"}), 401
 
-    token = create_jwt_token(email, user["is_admin"])
+    token = create_jwt_token(email_clean, user["is_admin"])
     return jsonify({
         "success": True,
         "token": token,

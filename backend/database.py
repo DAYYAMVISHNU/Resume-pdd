@@ -282,10 +282,12 @@ def create_user(name, email, password, is_admin=False):
     conn = get_db_connection()
     cursor = conn.cursor()
     pwd_hash = hash_password(password)
+    # Always store email as lowercase so login lookups always match
+    email_clean = email.strip().lower()
     try:
         cursor.execute(
             'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)',
-            (name, email, pwd_hash, bool(is_admin))
+            (name, email_clean, pwd_hash, bool(is_admin))
         )
         conn.commit()
         user_id = cursor.lastrowid
