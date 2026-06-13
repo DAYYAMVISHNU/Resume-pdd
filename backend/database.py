@@ -5,14 +5,149 @@ import hashlib
 import time
 from datetime import datetime
 
+_DATABASE_URL = os.environ.get('DATABASE_URL')
+_USE_POSTGRES = bool(_DATABASE_URL)
+
+if _USE_POSTGRES:
+    import psycopg2
+    import psycopg2.extras
+
+def format_datetime(val, fmt="%b %d, %Y"):
+    if not val:
+        return "Just Now"
+    if isinstance(val, datetime):
+        return val.strftime(fmt)
+    if isinstance(val, str):
+        for f in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M:%S.%f"):
+            try:
+                return datetime.strptime(val, f).strftime(fmt)
+            except ValueError:
+                continue
+        return val
+    return str(val)
+
+class DictRow(dict):
+    def __init__(self, row_dict, row_tuple):
+        super().__init__(row_dict)
+        self._tuple = row_tuple
+        
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self._tuple[key]
+        return super().__getitem__(key)
+
+def make_row(row, cursor):
+    if row is None:
+        return None
+    if isinstance(row, sqlite3.Row):
+        return DictRow(dict(row), tuple(row))
+    elif hasattr(row, 'keys'):
+        return DictRow({k: row[k] for k in row.keys()}, tuple(row))
+    elif isinstance(row, (list, tuple)):
+        description = cursor.description
+        if description:
+            keys = [col[0] for col in description]
+            row_dict = dict(zip(keys, row))
+            return DictRow(row_dict, tuple(row))
+    return row
+
+class DBCursorWrapper:
+    def __init__(self, cursor):
+        self.cursor = cursor
+
+    @property
+    def lastrowid(self):
+        if _USE_POSTGRES:
+            return getattr(self, '_last_inserted_id', None)
+        else:
+            return self.cursor.lastrowid
+
+    def execute(self, query, params=None):
+        if params is None:
+            params = ()
+        
+        if _USE_POSTGRES:
+            query = query.replace('?', '%s')
+            query = query.replace('CREATE INDEX IF NOT EXISTS', 'CREATE INDEX')
+            query = query.replace('INTEGER PRIMARY KEY AUTOINCREMENT', 'SERIAL PRIMARY KEY')
+            query = query.replace('is_admin BOOLEAN DEFAULT 0', 'is_admin BOOLEAN DEFAULT FALSE')
+            query = query.replace('last_ping REAL', 'last_ping DOUBLE PRECISION')
+            query = query.replace("STRFTIME('%w', created_at)", "CAST(EXTRACT(dow FROM created_at) AS INTEGER)::text")
+            query = query.replace("strftime('%w', created_at)", "CAST(EXTRACT(dow FROM created_at) AS INTEGER)::text")
+            
+            if 'INSERT OR REPLACE' in query:
+                if 'active_sessions' in query:
+                    query = '''INSERT INTO active_sessions (email, name, last_ping) VALUES (%s, %s, %s)
+                               ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name, last_ping = EXCLUDED.last_ping'''
+            
+            is_insert = query.strip().upper().startswith('INSERT')
+            if is_insert and 'RETURNING' not in query.upper() and 'active_sessions' not in query:
+                query = query.rstrip(';').strip() + ' RETURNING id'
+                self.cursor.execute(query, params)
+                row = self.cursor.fetchone()
+                self._last_inserted_id = row[0] if row else None
+                return self
+                
+        self.cursor.execute(query, params)
+        return self
+
+    def fetchone(self):
+        row = self.cursor.fetchone()
+        return make_row(row, self.cursor)
+
+    def fetchall(self):
+        rows = self.cursor.fetchall()
+        return [make_row(r, self.cursor) for r in rows]
+
+    def close(self):
+        self.cursor.close()
+
+    def __iter__(self):
+        return iter(self.cursor)
+
+class DBConnectionWrapper:
+    def __init__(self, conn):
+        self.conn = conn
+
+    def cursor(self):
+        if _USE_POSTGRES:
+            return DBCursorWrapper(self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor))
+        return DBCursorWrapper(self.conn.cursor())
+
+    def commit(self):
+        self.conn.commit()
+
+    def close(self):
+        self.conn.close()
+
+    def rollback(self):
+        self.conn.rollback()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type:
+            self.conn.rollback()
+        else:
+            self.conn.commit()
+        self.conn.close()
+
 # Vercel serverless: only /tmp/ is writable. Locally, use the file next to this script.
 _IS_VERCEL = os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV') is not None
 DATABASE_FILE = '/tmp/ats_analyzer.db' if _IS_VERCEL else os.path.join(os.path.dirname(__file__), "ats_analyzer.db")
 
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE_FILE)
-    conn.row_factory = sqlite3.Row
-    return conn
+    if _USE_POSTGRES:
+        if "sslmode=" in _DATABASE_URL:
+            conn = psycopg2.connect(_DATABASE_URL)
+        else:
+            conn = psycopg2.connect(_DATABASE_URL, sslmode='require')
+        return DBConnectionWrapper(conn)
+    else:
+        conn = sqlite3.connect(DATABASE_FILE)
+        conn.row_factory = sqlite3.Row
+        return DBConnectionWrapper(conn)
 
 def db_init():
     """Initializes the SQLite database tables and seeds the admin user if absent."""
@@ -108,8 +243,8 @@ def db_init():
         stored_hash = salt.hex() + ":" + pwd_hash.hex()
         
         cursor.execute(
-            'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 1)',
-            ('Vishnu', 'lvishnu181@gmail.com', stored_hash)
+            'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)',
+            ('Vishnu', 'lvishnu181@gmail.com', stored_hash, True)
         )
 
     # Seed Mock Google and Github users if not exists for OAuth bypass demos
@@ -120,8 +255,8 @@ def db_init():
             pwd_hash = hashlib.pbkdf2_hmac('sha256', "mockpass123".encode('utf-8'), salt, 100000)
             stored_hash = salt.hex() + ":" + pwd_hash.hex()
             cursor.execute(
-                'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, 0)',
-                (mock_name, mock_email, stored_hash)
+                'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)',
+                (mock_name, mock_email, stored_hash, False)
             )
     
     conn.commit()
@@ -150,7 +285,7 @@ def create_user(name, email, password, is_admin=False):
     try:
         cursor.execute(
             'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)',
-            (name, email, pwd_hash, 1 if is_admin else 0)
+            (name, email, pwd_hash, bool(is_admin))
         )
         conn.commit()
         user_id = cursor.lastrowid
@@ -222,7 +357,7 @@ def get_analyses_for_user(user_id):
         analyses.append({
             "id": r["id"],
             "role": "Job Match Analysis" if r["job_desc"] else "Resume Scan",
-            "date": datetime.strptime(r["created_at"], "%Y-%m-%d %H:%M:%S").strftime("%b %d, %Y") if r["created_at"] else "Just Now",
+            "date": format_datetime(r["created_at"], "%b %d, %Y"),
             "count": 1,
             "topScore": r["score"],
             "status": "Completed",
@@ -268,10 +403,7 @@ def get_chat_messages(user_email):
     
     messages = []
     for r in rows:
-        try:
-            ts = datetime.strptime(r["timestamp"], "%Y-%m-%d %H:%M:%S").strftime("%I:%M %p")
-        except Exception:
-            ts = "Just Now"
+        ts = format_datetime(r["timestamp"], "%I:%M %p")
         messages.append({
             "sender": r["sender"],
             "text": r["message"],
@@ -296,10 +428,7 @@ def get_active_chat_summaries():
     
     summaries = []
     for r in rows:
-        try:
-            ts = datetime.strptime(r["timestamp"], "%Y-%m-%d %H:%M:%S").strftime("%I:%M %p")
-        except Exception:
-            ts = "Just now"
+        ts = format_datetime(r["timestamp"], "%I:%M %p")
             
         summaries.append({
             "email": r["user_email"],
@@ -364,13 +493,8 @@ def get_admin_metrics():
     score_history = []
     
     for idx, r in enumerate(recent_rows):
-        try:
-            ts = datetime.strptime(r["created_at"], "%Y-%m-%d %H:%M:%S")
-            formatted_date = ts.strftime("%b %d, %Y")
-            formatted_time = ts.strftime("%I:%M %p")
-        except Exception:
-            formatted_date = "Just now"
-            formatted_time = "Just now"
+        formatted_date = format_datetime(r["created_at"], "%b %d, %Y")
+        formatted_time = format_datetime(r["created_at"], "%I:%M %p")
             
         recent_analyses.append({
             "id": r["id"],
