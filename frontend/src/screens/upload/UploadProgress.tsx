@@ -16,10 +16,11 @@ export const UploadProgress = () => {
   }
   
   const [progress, setProgress] = useState(0);
-  const [fileStatuses, setFileStatuses] = useState<{name: string, status: 'waiting' | 'uploading' | 'done' | 'error', p: number, result?: any}[]>(
+  const [fileStatuses, setFileStatuses] = useState<{name: string, status: 'waiting' | 'uploading' | 'done' | 'error', p: number, result?: any, error?: string}[]>(
     files.map((f: File) => ({ name: f.name, status: 'waiting', p: 0 }))
   );
   const [isProcessing, setIsProcessing] = useState(true);
+  const [hasErrorDetails, setHasErrorDetails] = useState(false);
 
   useEffect(() => {
     if (files.length === 0) {
@@ -59,7 +60,14 @@ export const UploadProgress = () => {
                   reject(new Error("Invalid JSON"));
                 }
               } else {
-                reject(new Error(`Server error: ${xhr.status}`));
+                let errMsg = `Server error: ${xhr.status}`;
+                try {
+                  const resJson = JSON.parse(xhr.responseText);
+                  if (resJson.error) {
+                    errMsg = resJson.error;
+                  }
+                } catch (e) {}
+                reject(new Error(errMsg));
               }
             };
             xhr.onerror = () => reject(new Error("Network error"));
@@ -92,11 +100,12 @@ export const UploadProgress = () => {
             newStatuses[i] = { ...newStatuses[i], status: 'done', p: 100, result: data };
             return newStatuses;
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error(`Error processing ${file.name}:`, error);
+          setHasErrorDetails(true);
           setFileStatuses(prev => {
             const newStatuses = [...prev];
-            newStatuses[i] = { ...newStatuses[i], status: 'error', p: 0 };
+            newStatuses[i] = { ...newStatuses[i], status: 'error', p: 0, error: error.message || "Upload failed" };
             return newStatuses;
           });
         }
@@ -107,16 +116,18 @@ export const UploadProgress = () => {
 
       setIsProcessing(false);
       
-      // Sort results by score
-      results.sort((a, b) => b.score - a.score);
+      if (results.length > 0) {
+        // Sort results by score
+        results.sort((a, b) => b.score - a.score);
 
-      // Save the actual full results to localStorage so they persist across page reloads!
-      localStorage.setItem('currentAnalysisCandidates', JSON.stringify(results));
+        // Save the actual full results to localStorage so they persist across page reloads!
+        localStorage.setItem('currentAnalysisCandidates', JSON.stringify(results));
 
-      // Saved implicitly by backend during analyze calls.
-      setTimeout(() => {
-        navigate('/ranking/overview', { state: { candidates: results } });
-      }, 1000);
+        // Saved implicitly by backend during analyze calls.
+        setTimeout(() => {
+          navigate('/ranking/overview', { state: { candidates: results } });
+        }, 1000);
+      }
     };
 
     processFiles();
@@ -124,7 +135,7 @@ export const UploadProgress = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <SubPageHeader title={isProcessing ? "Uploading..." : "Complete!"} />
+      <SubPageHeader title={isProcessing ? "Uploading..." : hasErrorDetails ? "Upload Failed" : "Complete!"} />
 
       <div className="flex-1 p-4">
         <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center mb-6">
@@ -139,7 +150,7 @@ export const UploadProgress = () => {
                 fill="transparent">
               </circle>
               <circle
-                className={`${isProcessing ? 'text-indigo-600' : 'text-green-500'} stroke-current transition-all duration-300 ease-out`}
+                className={`${isProcessing ? 'text-indigo-600' : hasErrorDetails ? 'text-red-500' : 'text-green-500'} stroke-current transition-all duration-300 ease-out`}
                 strokeWidth="8"
                 strokeLinecap="round"
                 cx="50"
@@ -157,10 +168,10 @@ export const UploadProgress = () => {
             </div>
           </div>
           <h3 className="font-bold text-gray-900">
-            {isProcessing ? "Processing Resumes" : "Analysis Complete"}
+            {isProcessing ? "Processing Resumes" : hasErrorDetails ? "Analysis Encountered Errors" : "Analysis Complete"}
           </h3>
           <p className="text-sm text-gray-500">
-            {isProcessing ? "Extracting text and analyzing formatting..." : "Redirecting to results..."}
+            {isProcessing ? "Extracting text and analyzing formatting..." : hasErrorDetails ? "Some or all resumes could not be processed." : "Redirecting to results..."}
           </p>
         </div>
 
@@ -173,9 +184,16 @@ export const UploadProgress = () => {
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center overflow-hidden">
                   <FileText size={16} className="text-gray-400 mr-2 shrink-0" />
-                  <span className="text-sm font-medium text-gray-900 truncate max-w-[200px]">
-                    {file.name}
-                  </span>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="text-sm font-medium text-gray-900 truncate max-w-[200px]">
+                      {file.name}
+                    </span>
+                    {file.status === 'error' && file.error && (
+                      <span className="text-xs text-red-500 mt-1 font-semibold">
+                        {file.error}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 {file.status === 'done' ? (
                   <div className="flex items-center text-green-500 text-xs font-semibold">
@@ -203,12 +221,20 @@ export const UploadProgress = () => {
           )}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 space-y-3">
+          {hasErrorDetails && !isProcessing && (
+            <button 
+              onClick={() => navigate('/upload')}
+              className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 transition-colors shadow-sm"
+            >
+              Try Uploading Again
+            </button>
+          )}
           <button 
             onClick={() => navigate('/home')}
             className="w-full py-3 bg-white border border-gray-300 text-gray-600 rounded-xl font-bold text-sm hover:bg-gray-50 transition-colors shadow-sm"
           >
-            Cancel & Return to Home
+            {hasErrorDetails && !isProcessing ? "Back to Dashboard" : "Cancel & Return to Home"}
           </button>
         </div>
       </div>
