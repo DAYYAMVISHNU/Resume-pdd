@@ -115,6 +115,15 @@ def token_required(f):
         # Get active user record
         user = database.get_user_by_email(payload["email"])
         if not user:
+            # Vercel serverless fallback: If SQLite is used without a centralized database,
+            # different endpoints run in isolated containers. Since the token is validly signed,
+            # we can safely auto-create the user in this container's SQLite database.
+            email = payload["email"]
+            name = email.split('@')[0].capitalize() + " User"
+            database.create_user(name, email, "oauth_secure_dummy_password_123456", is_admin=payload.get("isAdmin", False))
+            user = database.get_user_by_email(email)
+
+        if not user:
             return jsonify({"success": False, "error": "Authentication failed: user not found"}), 401
 
         return f(user, *args, **kwargs)
