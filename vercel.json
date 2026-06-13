@@ -38,6 +38,7 @@
     { "src": "/api/login", "dest": "/api/login.py" },
     { "src": "/api/register", "dest": "/api/register.py" },
     { "src": "/api/forgot-password", "dest": "/api/forgot-password.py" },
+    { "src": "/api/(.*)", "dest": "/api/index.py" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
