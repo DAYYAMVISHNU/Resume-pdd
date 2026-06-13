@@ -378,9 +378,34 @@ def login_user():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
     password = data.get("password")
+    is_oauth = data.get("isOAuth", False)
+    name = data.get("name", "Google User")
 
-    if not email or not password:
-        return jsonify({"success": False, "error": "Email and password are required"}), 400
+    if not email:
+        return jsonify({"success": False, "error": "Email is required"}), 400
+
+    if is_oauth:
+        email_clean = email.strip().lower()
+        user = database.get_user_by_email(email_clean)
+        if not user:
+            # Dynamically register OAuth user
+            res = database.create_user(name, email_clean, "oauth_secure_dummy_password_123456")
+            if not res.get("success"):
+                return jsonify(res), 500
+            user = database.get_user_by_email(email_clean)
+        
+        token = create_jwt_token(email_clean, user["is_admin"])
+        return jsonify({
+            "success": True,
+            "token": token,
+            "name": user["name"],
+            "email": user["email"],
+            "isAdmin": bool(user["is_admin"])
+        })
+
+    # Standard Email/Password login
+    if not password:
+        return jsonify({"success": False, "error": "Password is required"}), 400
 
     user = database.get_user_by_email(email)
     if not user or not database.verify_password(user["password_hash"], password):

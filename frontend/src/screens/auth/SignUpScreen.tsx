@@ -50,6 +50,56 @@ export const SignUpScreen = () => {
     }
   };
 
+  const handleOAuthLogin = async (provider: string) => {
+    setError('');
+    const mockEmail = window.prompt(`Enter your ${provider} Email to sign up:`);
+    if (!mockEmail) return;
+
+    if (!mockEmail.includes('@') || !mockEmail.includes('.')) {
+      setError('Invalid email address format');
+      return;
+    }
+
+    const namePart = mockEmail.split('@')[0];
+    const defaultName = namePart.charAt(0).toUpperCase() + namePart.slice(1) + ' User';
+    const mockName = window.prompt(`Enter your Full Name (optional):`, defaultName) || defaultName;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(getApiUrl('/api/login'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: mockEmail,
+          name: mockName,
+          isOAuth: true,
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('userName', result.name);
+        localStorage.setItem('userEmail', result.email);
+        if (result.email.toLowerCase() === 'lvishnu181@gmail.com') {
+          localStorage.setItem('isAdmin', 'true');
+        } else {
+          localStorage.removeItem('isAdmin');
+        }
+        navigate('/home');
+      } else {
+        setError(result.error || `${provider} Signup failed`);
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Connection to backend failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <SubPageHeader title="" onBack={() => navigate('/login')} />
@@ -202,7 +252,7 @@ export const SignUpScreen = () => {
           }}
           className="mt-8">
           
-          <Button variant="outline" fullWidth icon={<Chrome size={20} />}>
+          <Button variant="outline" fullWidth icon={<Chrome size={20} />} onClick={() => handleOAuthLogin('Google')} disabled={isLoading}>
             Sign up with Google
           </Button>
         </motion.div>

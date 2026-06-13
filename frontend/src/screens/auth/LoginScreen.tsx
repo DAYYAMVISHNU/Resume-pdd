@@ -48,19 +48,54 @@ export const LoginScreen = () => {
     }
   };
 
-  const handleOAuthLogin = (provider: string) => {
-    setIsLoading(true);
-    const mockEmail = provider === 'Google' ? 'vishnu@gmail.com' : 'vishnu@github.com';
-    const namePart = mockEmail.split('@')[0];
-    const capitalizedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-    localStorage.setItem('userName', capitalizedName + ' User');
-    localStorage.setItem('userEmail', mockEmail);
-    // Secure token stub for mock OAuth
-    localStorage.setItem('token', 'mock-oauth-token-123456');
+  const handleOAuthLogin = async (provider: string) => {
+    setError('');
+    const mockEmail = window.prompt(`Enter your ${provider} Email to sign in:`);
+    if (!mockEmail) return;
 
-    setTimeout(() => {
-      navigate('/home');
-    }, 1000);
+    if (!mockEmail.includes('@') || !mockEmail.includes('.')) {
+      setError('Invalid email address format');
+      return;
+    }
+
+    const namePart = mockEmail.split('@')[0];
+    const defaultName = namePart.charAt(0).toUpperCase() + namePart.slice(1) + ' User';
+    const mockName = window.prompt(`Enter your Full Name (optional):`, defaultName) || defaultName;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(getApiUrl('/api/login'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: mockEmail,
+          name: mockName,
+          isOAuth: true,
+        }),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('userName', result.name);
+        localStorage.setItem('userEmail', result.email);
+        if (result.isAdmin) {
+          localStorage.setItem('isAdmin', 'true');
+        } else {
+          localStorage.removeItem('isAdmin');
+        }
+        navigate('/home');
+      } else {
+        setError(result.error || `${provider} Login failed`);
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Connection to backend failed');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAdminLogin = async () => {
