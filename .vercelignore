@@ -1,0 +1,10 @@
+node_modules
+dist
+.venv
+venv
+backend/venv
+mobile_flutter
+.git
+.vscode
+.idea
+*.log
