@@ -12,6 +12,14 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const getFriendlyError = (message?: string) => {
+    if (!message) return 'Invalid email address or password';
+    if (message.includes('secure password')) {
+      return 'Invalid email address or password';
+    }
+    return message;
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -38,7 +46,7 @@ export const LoginScreen = () => {
         }
         navigate('/home');
       } else {
-        setError(result.error || 'Invalid email or password');
+        setError(getFriendlyError(result.error));
       }
     } catch (err) {
       console.error(err);
