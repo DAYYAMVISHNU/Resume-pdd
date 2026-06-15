@@ -2,6 +2,7 @@
   "name": "resume-analyzer-root",
   "version": "0.0.1",
   "private": true,
+  "workspaces": ["frontend"],
   "scripts": {
     "dev": "npm run dev --prefix frontend",
     "backend": "cd backend && ..\\.venv\\Scripts\\python.exe app.py",
