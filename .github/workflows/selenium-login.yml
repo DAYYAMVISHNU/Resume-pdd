@@ -60,7 +60,7 @@ jobs:
           from selenium.webdriver.chrome.service import Service
           from selenium.webdriver.chrome.options import Options
 
-          BASE_URL = "https://dayyamvishnu.github.io/Resume-pdd"
+          BASE_URL = "https://resume-pdd.vercel.app"
           results = []
           start_time = datetime.now()
 

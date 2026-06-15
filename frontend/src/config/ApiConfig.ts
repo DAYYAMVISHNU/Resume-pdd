@@ -6,7 +6,7 @@ const isNative =
 
 export const API_BASE_URL = isNative 
   ? 'http://127.0.0.1:5000' 
-  : 'https://29752835-0400-467d-9963-386d7b517de0.vercel.app';
+  : 'https://resume-pdd.vercel.app';
 
 export const getApiUrl = (endpoint: string) => {
   const formattedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
