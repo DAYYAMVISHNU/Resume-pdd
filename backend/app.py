@@ -37,8 +37,14 @@ if LIMITER_AVAILABLE:
 else:
     limiter = None
 
-# Initialize database on startup
-db_init()
+# Initialize database on startup — wrapped so a missing DATABASE_URL
+# produces a clear /health error instead of an opaque cold-start 500.
+_DB_INIT_ERROR = None
+try:
+    db_init()
+except Exception as _e:
+    _DB_INIT_ERROR = str(_e)
+    print(f"[STARTUP WARNING] db_init() failed: {_DB_INIT_ERROR}")
 
 # JWT Encryption Utilities  (DEF-001 fix: read from environment variable)
 JWT_SECRET = os.environ.get(
@@ -358,6 +364,13 @@ def home():
 
 @app.route("/health", methods=["GET"])
 def health_check():
+    if _DB_INIT_ERROR:
+        return jsonify({
+            "status": "degraded",
+            "error": "Database initialization failed — check DATABASE_URL env var",
+            "detail": _DB_INIT_ERROR,
+            "timestamp": time.time()
+        }), 503
     return jsonify({"status": "ok", "timestamp": time.time()})
 
 @app.route("/api/register", methods=["POST"])

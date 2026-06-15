@@ -8,9 +8,9 @@ from datetime import datetime
 _DATABASE_URL = os.environ.get('DATABASE_URL')
 _USE_POSTGRES = bool(_DATABASE_URL)
 
-if _USE_POSTGRES:
-    import psycopg2
-    import psycopg2.extras
+# psycopg2 is imported lazily inside get_db_connection() to avoid
+# crashing Vercel cold-starts when the package is installed but
+# DATABASE_URL isn't yet set (or vice-versa).
 
 def format_datetime(val, fmt="%b %d, %Y"):
     if not val:
@@ -111,6 +111,7 @@ class DBConnectionWrapper:
 
     def cursor(self):
         if _USE_POSTGRES:
+            import psycopg2.extras
             return DBCursorWrapper(self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor))
         return DBCursorWrapper(self.conn.cursor())
 
@@ -139,6 +140,9 @@ DATABASE_FILE = '/tmp/ats_analyzer.db' if _IS_VERCEL else os.path.join(os.path.d
 
 def get_db_connection():
     if _USE_POSTGRES:
+        # Lazy import — only executed when DATABASE_URL is actually set
+        import psycopg2
+        import psycopg2.extras
         if "sslmode=" in _DATABASE_URL:
             conn = psycopg2.connect(_DATABASE_URL)
         else:
@@ -229,9 +233,18 @@ def db_init():
     ''')
     
     # Indices for high performance
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)')
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_analyses_user ON analyses(user_id)')
-    cursor.execute('CREATE INDEX IF NOT EXISTS idx_chats_email ON chats(user_email)')
+    # Use try/except per index so re-runs on PostgreSQL (which doesn't
+    # support IF NOT EXISTS for indexes in older versions) don't abort.
+    for idx_sql in [
+        'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)',
+        'CREATE INDEX IF NOT EXISTS idx_analyses_user ON analyses(user_id)',
+        'CREATE INDEX IF NOT EXISTS idx_chats_email ON chats(user_email)',
+    ]:
+        try:
+            cursor.execute(idx_sql)
+            conn.commit()
+        except Exception:
+            conn.rollback()
 
     # Seed Admin User if not exists
     cursor.execute('SELECT * FROM users WHERE email = ?', ('lvishnu181@gmail.com',))

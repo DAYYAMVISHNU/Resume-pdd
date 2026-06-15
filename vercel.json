@@ -28,6 +28,7 @@
   ],
   "routes": [
     { "handle": "filesystem" },
+    { "src": "/health", "dest": "/api/index.py" },
     { "src": "/analyze", "dest": "/api/index.py" },
     { "src": "/ats_check", "dest": "/api/index.py" },
     { "src": "/analytics", "dest": "/api/index.py" },
