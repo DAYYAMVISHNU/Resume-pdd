@@ -1,16 +1,24 @@
 {
-  "count": 13,
+  "count": 16,
   "endpoints": [
     {
       "path": "/",
       "methods": [
         "GET"
       ],
-      "function": "health_check",
+      "function": "home",
       "requires": "none"
     },
     {
       "path": "/api/register",
+      "methods": [
+        "POST"
+      ],
+      "function": "register_user",
+      "requires": "none"
+    },
+    {
+      "path": "/api/login",
       "methods": [
         "POST"
       ],
@@ -19,6 +27,14 @@
     },
     {
       "path": "/api/forgot-password",
+      "methods": [
+        "POST"
+      ],
+      "function": "forgot_password",
+      "requires": "none"
+    },
+    {
+      "path": "/analyze",
       "methods": [
         "POST"
       ],
@@ -85,6 +101,14 @@
       "path": "/ping",
       "methods": [
         "POST"
+      ],
+      "function": "ping_user",
+      "requires": "token"
+    },
+    {
+      "path": "/active_users",
+      "methods": [
+        "GET"
       ],
       "function": "get_active_users",
       "requires": "admin"

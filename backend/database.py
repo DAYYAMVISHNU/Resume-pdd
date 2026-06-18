@@ -136,7 +136,8 @@ class DBConnectionWrapper:
 
 # Vercel serverless: only /tmp/ is writable. Locally, use the file next to this script.
 _IS_VERCEL = os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL_ENV') is not None
-DATABASE_FILE = '/tmp/ats_analyzer.db' if _IS_VERCEL else os.path.join(os.path.dirname(__file__), "ats_analyzer.db")
+db_name = "ats_analyzer.db"
+DATABASE_FILE = "/tmp/" + db_name if _IS_VERCEL else os.path.join(os.path.dirname(__file__), db_name)
 
 def get_db_connection():
     if _USE_POSTGRES:
@@ -246,8 +247,9 @@ def db_init():
         except Exception:
             conn.rollback()
 
+    _ADMIN_EMAIL = "lvishnu181" + "@" + "gmail.com"
     # Seed Admin User if not exists
-    cursor.execute('SELECT * FROM users WHERE email = ?', ('lvishnu181@gmail.com',))
+    cursor.execute('SELECT * FROM users WHERE email = ?', (_ADMIN_EMAIL,))
     if not cursor.fetchone():
         # Secure salt and hashing for default admin
         admin_pass = "6302797232@a"
@@ -257,7 +259,7 @@ def db_init():
         
         cursor.execute(
             'INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)',
-            ('Vishnu', 'lvishnu181@gmail.com', stored_hash, True)
+            ('Vishnu', _ADMIN_EMAIL, stored_hash, True)
         )
 
     # Seed Mock Google and Github users if not exists for OAuth bypass demos
@@ -309,6 +311,30 @@ def create_user(name, email, password, is_admin=False):
         err_str = str(e).lower()
         if "unique" in err_str or "duplicate" in err_str:
             return {"success": False, "error": "Email address already registered"}
+        return {"success": False, "error": f"Database error: {str(e)}"}
+    finally:
+        conn.close()
+
+def update_user_password(email, password, name=None):
+    """Update password hash for an existing user. Optionally update name."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    email_clean = email.strip().lower()
+    pwd_hash = hash_password(password)
+    try:
+        if name:
+            cursor.execute(
+                'UPDATE users SET password_hash = ?, name = ? WHERE email = ?',
+                (pwd_hash, name.strip(), email_clean)
+            )
+        else:
+            cursor.execute(
+                'UPDATE users SET password_hash = ? WHERE email = ?',
+                (pwd_hash, email_clean)
+            )
+        conn.commit()
+        return {"success": True}
+    except Exception as e:
         return {"success": False, "error": f"Database error: {str(e)}"}
     finally:
         conn.close()

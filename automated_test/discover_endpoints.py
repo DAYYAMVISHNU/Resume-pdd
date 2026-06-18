@@ -20,7 +20,7 @@ if not APP_PY.exists():
 text = APP_PY.read_text(encoding='utf-8')
 
 # Find all @app.route occurrences and capture the route and methods
-route_pattern = re.compile(r"@app\.route\(([^)]+)\)\s*\n(.*?)\ndef\s+(\w+)\(", re.S)
+route_pattern = re.compile(r"@app\.route\(([^)]+)\)[\s\n\r]*(.*?)\bdef\s+(\w+)\(", re.S)
 matches = route_pattern.findall(text)
 
 endpoints = []

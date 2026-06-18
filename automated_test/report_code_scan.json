@@ -1,7 +1,11 @@
 {
-  "count": 0,
-  "scan_date": "2026-06-11",
-  "status": "CLEAN",
-  "findings": [],
-  "notes": "All 3 previous findings have been resolved: JWT_SECRET now read from os.environ['JWT_SECRET'] via os.environ.get(). Test suite passwords are test-only data, not production secrets."
+  "count": 1,
+  "findings": [
+    {
+      "file": "backend\\test_suite.py",
+      "match": "password\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"]",
+      "snippet": "Secu...",
+      "line_context": "        \"\"\"Verify password cryptography hashing and validation matches exactly.\"\"\"\n        password = \"SecurePassword123\"\n        hashed = hash_password(password)"
+    }
+  ]
 }

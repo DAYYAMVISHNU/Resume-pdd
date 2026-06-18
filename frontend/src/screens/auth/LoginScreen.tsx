@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Mail, Lock, Shield, Chrome } from 'lucide-react';
 import { getApiUrl } from '../../config/ApiConfig';
+import { localVerifyUser } from '../../config/localAuth';
 
 export const LoginScreen = () => {
   const navigate = useNavigate();
@@ -46,11 +47,52 @@ export const LoginScreen = () => {
         }
         navigate('/home');
       } else {
-        setError(getFriendlyError(result.error));
+        // Backend failed (e.g. serverless DB reset) — try local credential store
+        const localUser = await localVerifyUser(email, password);
+        if (localUser) {
+          // Generate a minimal local token so protected routes work
+          const localToken = btoa(JSON.stringify({
+            email: localUser.email,
+            isAdmin: localUser.isAdmin,
+            exp: Date.now() + 86400000,
+            source: 'local'
+          }));
+          localStorage.setItem('token', localToken);
+          localStorage.setItem('userName', localUser.name);
+          localStorage.setItem('userEmail', localUser.email);
+          if (localUser.isAdmin) {
+            localStorage.setItem('isAdmin', 'true');
+          } else {
+            localStorage.removeItem('isAdmin');
+          }
+          navigate('/home');
+        } else {
+          setError(getFriendlyError(result.error));
+        }
       }
     } catch (err) {
       console.error(err);
-      setError('Connection to backend failed');
+      // Network error — try local credential store as full fallback
+      const localUser = await localVerifyUser(email, password);
+      if (localUser) {
+        const localToken = btoa(JSON.stringify({
+          email: localUser.email,
+          isAdmin: localUser.isAdmin,
+          exp: Date.now() + 86400000,
+          source: 'local'
+        }));
+        localStorage.setItem('token', localToken);
+        localStorage.setItem('userName', localUser.name);
+        localStorage.setItem('userEmail', localUser.email);
+        if (localUser.isAdmin) {
+          localStorage.setItem('isAdmin', 'true');
+        } else {
+          localStorage.removeItem('isAdmin');
+        }
+        navigate('/home');
+      } else {
+        setError('Connection to backend failed. Please check your credentials.');
+      }
     } finally {
       setIsLoading(false);
     }

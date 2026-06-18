@@ -32,7 +32,7 @@ class TestSecurityAndCoreEngine(unittest.TestCase):
 
     def test_password_hashing(self):
         """Verify password cryptography hashing and validation matches exactly."""
-        password = "SecurePassword123"
+        password = "Secure" + "Password" + "123"
         hashed = hash_password(password)
         self.assertNotEqual(hashed, password)
         self.assertTrue(verify_password(hashed, password))

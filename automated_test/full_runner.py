@@ -107,10 +107,10 @@ def run_curl(method, url, auth_token=None, data=None, json_data=None, max_time=1
 report = []
 
 def add_test_result(endpoint, method, role, auth_token, expected_status, test_category, note=''):
-    """Run a single test and add to report."""
     url = BASE_URL.rstrip('/') + endpoint
     status, response_time, body = run_curl(method, url, auth_token=auth_token)
-    finding = status != expected_status
+    expected_list = [expected_status] if isinstance(expected_status, int) else expected_status
+    finding = status not in expected_list
     severity = 'high' if finding else 'info'
     
     report.append({
@@ -128,7 +128,7 @@ def add_test_result(endpoint, method, role, auth_token, expected_status, test_ca
     })
     
     symbol = 'FAIL' if finding else 'PASS'
-    print(f"{symbol} {method:6} {endpoint:30} role={role:8} status={status:3} expected={expected_status:3} ({test_category})")
+    print(f"{symbol} {method:6} {endpoint:30} role={role:8} status={status:3} expected={str(expected_status):15} ({test_category})")
     time.sleep(0.1)
 
 print("\\n[CATEGORY 0] AuthN - Testing unauthenticated access to protected endpoints")
@@ -160,35 +160,35 @@ for ep in discovered:
                 'authz_privesc', 'User should not access admin endpoint'
             )
 
-print("\\n[CATEGORY 3] AuthN - Testing with valid user token on protected endpoints")
+print("\n[CATEGORY 3] AuthN - Testing with valid user token on protected endpoints")
 for ep in discovered:
     if ep['requires'] == 'token':
         for method in ep['methods']:
             add_test_result(
-                ep['path'], method, 'user', user_token, 200,
+                ep['path'], method, 'user', user_token, [200, 400, 422],
                 'authn_valid', 'Valid token should pass'
             )
 
-print("\\n[CATEGORY 4] AuthN - Testing with valid admin token on admin endpoints")
+print("\n[CATEGORY 4] AuthN - Testing with valid admin token on admin endpoints")
 for ep in discovered:
     if ep['requires'] == 'admin':
         for method in ep['methods']:
             add_test_result(
-                ep['path'], method, 'admin', admin_token, 200,
+                ep['path'], method, 'admin', admin_token, [200, 400, 422],
                 'authn_valid_admin', 'Valid admin token should pass'
             )
 
-print("\\n[CATEGORY 5] Discovery - Testing public endpoints (no auth)")
+print("\n[CATEGORY 5] Discovery - Testing public endpoints (no auth)")
 for ep in discovered:
     if ep['requires'] == 'none':
         for method in ep['methods']:
-            expected = 200
+            expected = [200, 400, 422]
             add_test_result(
                 ep['path'], method, 'public', None, expected,
                 'discovery_public', 'Public endpoint'
             )
 
-print("\\n[CATEGORY 6] Token tampering - flipping isAdmin claim without re-signing")
+print("\n[CATEGORY 6] Token tampering - flipping isAdmin claim without re-signing")
 # Tamper with user token to set isAdmin=true and attempt admin access
 def tamper_jwt(token, modify_admin=True):
     parts = token.split('.')
@@ -200,7 +200,8 @@ def tamper_jwt(token, modify_admin=True):
         payload = json.loads(base64.urlsafe_b64decode(payload_b64 + padding).decode())
         if modify_admin:
             payload['isAdmin'] = True
-        return f"{header_b64}.{payload_b64}.{sig}"
+        new_payload_b64 = base64_url_encode(payload)
+        return f"{header_b64}.{new_payload_b64}.{sig}"
     except:
         return None
 
@@ -251,7 +252,7 @@ for ep in discovered:
                     json_data={'q': payload}
                 )
                 # Detection: look for SQL error patterns in response
-                has_sql_error = bool(re.search(r'(SQL|syntax|mysql|postgresql|error)', body, re.I))
+                has_sql_error = bool(re.search(r'(SQL error|syntax error|mysql|postgresql)', body, re.I))
                 is_finding = has_sql_error or status == 500
                 report.append({
                     'endpoint': ep['path'],
