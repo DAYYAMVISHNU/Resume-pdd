@@ -1,0 +1,156 @@
+name: "🚀 Performance & Load Tests"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for manual trigger"
+        required: false
+        default: "Manual run"
+
+permissions:
+  contents: read
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  load-test:
+    name: "High-Concurrency Load Test"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # ── 1. Checkout ───────────────────────────────────────────────────────
+      - name: "📥 Checkout repository"
+        uses: actions/checkout@v4
+
+      # ── 2. Python setup ───────────────────────────────────────────────────
+      - name: "🐍 Set up Python 3.11"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # ── 3. Install test dependencies ──────────────────────────────────────
+      - name: "📦 Install test dependencies"
+        run: |
+          python -m pip install --upgrade pip
+          pip install openpyxl requests
+
+      # ── 4. Start Mock Server ──────────────────────────────────────────────
+      - name: "🌐 Start local mock service"
+        run: |
+          python automated_test/ci_mock_server.py &
+          # Give the background server a couple of seconds to spin up
+          sleep 3
+          # Simple check to verify it is running
+          curl -s http://127.0.0.1:5000/health
+
+      # ── 5. Run Load Test ──────────────────────────────────────────────────
+      - name: "⚡ Execute 100-user Load Test"
+        run: |
+          python automated_test/load_test.py
+
+      # ── 6. Generate Actions Summary from Excel ─────────────────────────────
+      - name: "📊 Generate performance summary dashboard"
+        if: always()
+        run: |
+          python - <<'PYEOF'
+          import os
+          import openpyxl
+
+          excel_file = "automated_test/load_test_results.xlsx"
+          step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
+
+          if not os.path.exists(excel_file):
+              print("Excel report not found — skipping summary generation")
+              with open(step_summary, "w") as f:
+                  f.write("## ⚠️ Performance Report Not Found\nThe load testing execution failed to produce an Excel report.\n")
+              sys.exit(0)
+
+          wb = openpyxl.load_workbook(excel_file)
+          ws = wb["Summary Dashboard"]
+
+          # Read values from Summary Dashboard tab
+          target_url = ws["B5"].value
+          concurrency = ws["B6"].value
+          duration = ws["B7"].value
+          start_time = ws["B8"].value
+          end_time = ws["B9"].value
+
+          total_reqs = ws["B15"].value
+          successes = ws["B16"].value
+          failures = ws["B17"].value
+          success_rate = ws["B18"].value
+          avg_rps = ws["B19"].value
+
+          min_lat = ws["D15"].value
+          med_lat = ws["D16"].value
+          avg_lat = ws["D17"].value
+          p90_lat = ws["D18"].value
+          p95_lat = ws["D19"].value
+          p99_lat = ws["D20"].value
+          max_lat = ws["D21"].value
+
+          # Build Markdown
+          md = []
+          md.append("# ⚡ High-Concurrency Load Test — Performance Report")
+          md.append("")
+          md.append(f"> **Target Endpoint:** `{target_url}`")
+          md.append(f"> **Concurrency Level:** `{concurrency}`  ·  **Duration:** `{duration}`")
+          md.append(f"> **Time Range:** `{start_time}` to `{end_time}`")
+          md.append("")
+          md.append("---")
+          md.append("")
+          md.append("## 📊 Overall Performance Metrics")
+          md.append("")
+          md.append("| Metric | Value | Status |")
+          md.append("|--------|-------|--------|")
+          
+          # Color indicators for pass rate
+          status_icon = "🟢 PASS" if failures == 0 else "🔴 FAIL"
+          md.append(f"| Total Requests Sent | **{total_reqs}** | - |")
+          md.append(f"| Successful Requests (200 OK) | **{successes}** | - |")
+          md.append(f"| Failed Requests / Errors | **{failures}** | {status_icon} |")
+          md.append(f"| Success Rate | **{success_rate}** | - |")
+          md.append(f"| Average Throughput (RPS) | **{avg_rps}** | - |")
+          md.append("")
+          md.append("---")
+          md.append("")
+          md.append("## ⏱️ Response Latency Profile")
+          md.append("")
+          md.append("| Latency Percentile | Response Time | Description |")
+          md.append("|--------------------|---------------|-------------|")
+          md.append(f"| Min | **{min_lat}** | Fastest single response |")
+          md.append(f"| Median (50th %ile) | **{med_lat}** | Typical response time |")
+          md.append(f"| Average | **{avg_lat}** | Mean response time |")
+          md.append(f"| 90th Percentile | **{p90_lat}** | 90% of requests are faster than this |")
+          md.append(f"| 95th Percentile | **{p95_lat}** | 95% of requests are faster than this |")
+          md.append(f"| 99th Percentile | **{p99_lat}** | Tail latency / 99% boundary |")
+          md.append(f"| Max | **{max_lat}** | Slowest single response |")
+          md.append("")
+          md.append("---")
+          md.append("")
+          md.append("> [!NOTE]")
+          md.append("> Detailed per-request raw metrics have been compiled inside the spreadsheet artifact.")
+          md.append("> You can download the full sheet from the build run artifacts.")
+
+          # Write to actions step summary
+          if step_summary:
+              with open(step_summary, "w", encoding="utf-8") as f:
+                  f.write("\n".join(md))
+              print("Successfully generated $GITHUB_STEP_SUMMARY")
+          PYEOF
+
+      # ── 7. Upload Excel Artifact ──────────────────────────────────────────
+      - name: "📤 Upload load test spreadsheet (Excel)"
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: "load-test-results-run${{ github.run_number }}"
+          path: automated_test/load_test_results.xlsx
+          retention-days: 30
+          if-no-files-found: warn
