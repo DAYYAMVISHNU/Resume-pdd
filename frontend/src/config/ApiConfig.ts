@@ -1,8 +1,7 @@
 const isNative = 
   window.location.protocol === 'file:' || 
-  window.location.protocol === 'capacitor:' || 
   window.location.hostname === 'localhost' ||
-  !!(window as any).Capacitor;
+  !!(window as any).flutter_inappwebview;
 
 export const API_BASE_URL = isNative 
   ? 'http://127.0.0.1:5000' 

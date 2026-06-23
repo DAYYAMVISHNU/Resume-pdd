@@ -39,3 +39,7 @@ __pycache__/
 # Temporary files
 temp_output.txt
 
+# Environment and database files
+.env
+.env.*
+*.db

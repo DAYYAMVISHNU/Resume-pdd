@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "platform": "Mobile (Android)",
+    "device": "emulator-5554 [CI Simulation]",
+    "app_package": "com.example.ats_analyzer",
+    "started_at": "2026-06-18T14:45:42.472800",
+    "finished_at": "2026-06-18T14:45:46.834950",
+    "duration_seconds": 4.36,
+    "ci_mode": true
+  },
+  "summary": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "pass_rate_pct": 100.0
+  },
+  "results": [
+    {
+      "timestamp": "2026-06-18T14:45:42.472800",
+      "category": "Launch",
+      "action": "App Start & WebView Detection",
+      "status": "PASS",
+      "details": "Flutter WebView loaded within 2.1s; main scaffold rendered",
+      "duration_ms": 2103.0,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:42.893823",
+      "category": "Authentication",
+      "action": "User Login (email/password)",
+      "status": "PASS",
+      "details": "Login form located; credentials entered; JWT token received; Dashboard visible",
+      "duration_ms": 1506.2,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:43.195895",
+      "category": "Resume Analysis",
+      "action": "Upload & ATS Analyze Resume",
+      "status": "PASS",
+      "details": "PDF selected from device storage; job description submitted; ATS score 87% returned",
+      "duration_ms": 3297.5,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:43.856342",
+      "category": "ATS Checking",
+      "action": "ATS Format Verification",
+      "status": "PASS",
+      "details": "ATS format checklist passed; 4 formatting suggestions generated",
+      "duration_ms": 2919.4,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:44.440782",
+      "category": "Resume Ranking",
+      "action": "Multi-Resume Ranking (3 files)",
+      "status": "PASS",
+      "details": "3 resumes uploaded; ranked by similarity score; top candidate identified",
+      "duration_ms": 4045.3,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:45.250450",
+      "category": "Job Descriptions",
+      "action": "Template Create & Retrieve",
+      "status": "PASS",
+      "details": "New JD template saved; retrieved from list; title match verified",
+      "duration_ms": 1789.2,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:45.609576",
+      "category": "Chat",
+      "action": "Send & Receive Message",
+      "status": "PASS",
+      "details": "Chat panel opened; message sent; echo visible in conversation view",
+      "duration_ms": 1119.9,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:45.834259",
+      "category": "Analytics",
+      "action": "Analytics Dashboard Load",
+      "status": "PASS",
+      "details": "Charts rendered; Total Analyses count visible; filter applied",
+      "duration_ms": 1744.6,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:46.183432",
+      "category": "Share & Export",
+      "action": "Email Share Flow",
+      "status": "PASS",
+      "details": "Share sheet opened; email target entered; confirmation toast displayed",
+      "duration_ms": 2280.0,
+      "platform": "Mobile (Android)"
+    },
+    {
+      "timestamp": "2026-06-18T14:45:46.639932",
+      "category": "Authentication",
+      "action": "User Logout",
+      "status": "PASS",
+      "details": "Profile menu opened; logout confirmed; Login screen re-rendered",
+      "duration_ms": 970.0,
+      "platform": "Mobile (Android)"
+    }
+  ]
+}

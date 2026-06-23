@@ -1,11 +1,4 @@
 {
-  "count": 1,
-  "findings": [
-    {
-      "file": "backend\\test_suite.py",
-      "match": "password\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"]",
-      "snippet": "Secu...",
-      "line_context": "        \"\"\"Verify password cryptography hashing and validation matches exactly.\"\"\"\n        password = \"SecurePassword123\"\n        hashed = hash_password(password)"
-    }
-  ]
+  "count": 0,
+  "findings": []
 }

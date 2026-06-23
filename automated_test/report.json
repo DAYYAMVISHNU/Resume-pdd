@@ -1,1275 +1,5387 @@
 [
   {
-    "endpoint": "/analyze",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587760
-  },
-  {
-    "endpoint": "/ats_check",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587760
-  },
-  {
-    "endpoint": "/api/rank",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 226,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587760
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 226,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587761
-  },
-  {
-    "endpoint": "/api/job-descriptions",
+    "endpoint": "/",
     "method": "GET",
     "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
+    "status": 200,
+    "expected_status": [
+      200,
+      301,
+      302
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587761
-  },
-  {
-    "endpoint": "/chat/send",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587762
-  },
-  {
-    "endpoint": "/chat/messages",
-    "method": "GET",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 223,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587762
-  },
-  {
-    "endpoint": "/chat/conversations",
-    "method": "GET",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587762
-  },
-  {
-    "endpoint": "/ping",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 215,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587763
-  },
-  {
-    "endpoint": "/active_users",
-    "method": "GET",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 225,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587763
-  },
-  {
-    "endpoint": "/analytics",
-    "method": "GET",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 209,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587763
-  },
-  {
-    "endpoint": "/share",
-    "method": "POST",
-    "role": "anonymous",
-    "status": 401,
-    "expected_status": 401,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 217,
-    "test_category": "authn_none",
-    "note": "Should reject unauthenticated access",
-    "timestamp": 1781587764
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "baseline",
+    "note": "Root endpoint should be reachable without auth",
+    "timestamp": "2026-06-23T15:47:51.419443+00:00",
+    "body_snippet": "{\"message\":\"Production ATS Resume Analyzer REST backend is running successfully\",\"status\":\"secure\"}\n"
   },
   {
     "endpoint": "/analyze",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 209,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587764
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.487735+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.554783+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.620945+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 5,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.676890+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 28,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.755716+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.820913+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.886586+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:51.953767+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/ats_check",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 230,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587765
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.021254+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 33,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.104584+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 13,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.168787+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.236411+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.303330+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.370688+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.436957+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.502826+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/api/rank",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 226,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587765
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.569239+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.636485+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.704730+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.771128+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.837135+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.903356+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:52.971251+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.037118+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/api/job-descriptions",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 212,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587765
+    "severity": "pass",
+    "response_time_ms": 3,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.090811+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.155050+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.219267+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.286971+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.353954+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.421698+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.489453+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.554354+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/api/job-descriptions",
     "method": "GET",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 210,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587766
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.620915+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.686621+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.753509+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 4,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.807646+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 13,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.871230+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:53.937148+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.004266+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.071686+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/chat/send",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587766
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.137255+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.204206+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.270860+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.337613+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 4,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.391930+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 28,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.470401+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.535908+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.603620+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/chat/messages",
     "method": "GET",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587767
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.669413+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.736438+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.804979+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.871862+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:54.936959+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.004361+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.070673+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.135675+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/chat/conversations",
     "method": "GET",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 216,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587767
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.203870+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.270986+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.337756+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.404360+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.470410+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.538010+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.605501+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.671240+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/ping",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 236,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587767
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.737608+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.804028+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.870868+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:55.936251+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.004009+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.069609+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.136518+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.204043+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/active_users",
     "method": "GET",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 210,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587768
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.270787+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.337268+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.405288+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.469986+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.538842+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.605709+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.671535+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.738233+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/analytics",
     "method": "GET",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587768
+    "severity": "pass",
+    "response_time_ms": 19,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.807685+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 31,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.889316+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:56.955509+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.021755+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.087190+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.153166+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.220856+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.288013+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/share",
     "method": "POST",
-    "role": "malformed",
+    "role": "anon:no_token",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 216,
-    "test_category": "authn_malformed",
-    "note": "Should reject malformed token",
-    "timestamp": 1781587768
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "authn_bypass",
+    "note": "Token variant: no_token. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.355730+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:empty_string",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "authn_bypass",
+    "note": "Token variant: empty_string. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.420759+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:literal_null",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_null. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.487249+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:literal_undefined",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authn_bypass",
+    "note": "Token variant: literal_undefined. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.555489+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:random_garbage",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 13,
+    "test_category": "authn_bypass",
+    "note": "Token variant: random_garbage. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.619329+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:expired_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: expired_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.686719+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:alg_none_jwt",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: alg_none_jwt. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.753864+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anon:mock_oauth",
+    "status": 401,
+    "expected_status": [
+      401,
+      403,
+      422,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "authn_bypass",
+    "note": "Token variant: mock_oauth. 2xx = AuthN bypass.",
+    "timestamp": "2026-06-23T15:47:57.819950+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
   },
   {
     "endpoint": "/chat/conversations",
     "method": "GET",
     "role": "user",
     "status": 403,
-    "expected_status": 403,
+    "expected_status": [
+      403
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 235,
+    "severity": "pass",
+    "response_time_ms": 17,
     "test_category": "authz_privesc",
-    "note": "User should not access admin endpoint",
-    "timestamp": 1781587769
+    "note": "User token on admin-only endpoint. 200/201 = privilege escalation.",
+    "timestamp": "2026-06-23T15:47:57.887735+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: administrator privileges required\",\"success\":false}\n"
   },
   {
     "endpoint": "/active_users",
     "method": "GET",
     "role": "user",
     "status": 403,
-    "expected_status": 403,
+    "expected_status": [
+      403
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 222,
+    "severity": "pass",
+    "response_time_ms": 16,
     "test_category": "authz_privesc",
-    "note": "User should not access admin endpoint",
-    "timestamp": 1781587769
-  },
-  {
-    "endpoint": "/analyze",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 212,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587770
-  },
-  {
-    "endpoint": "/ats_check",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 220,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587770
-  },
-  {
-    "endpoint": "/api/rank",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 215,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587770
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 227,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587771
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 233,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587771
-  },
-  {
-    "endpoint": "/chat/send",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587772
+    "note": "User token on admin-only endpoint. 200/201 = privilege escalation.",
+    "timestamp": "2026-06-23T15:47:57.954845+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: administrator privileges required\",\"success\":false}\n"
   },
   {
     "endpoint": "/chat/messages",
     "method": "GET",
     "role": "user",
-    "status": 200,
+    "status": 403,
     "expected_status": [
-      200,
-      400,
-      422
+      403,
+      400
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 217,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587772
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "idor",
+    "note": "Reading chat messages of admin@example.com as user. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.021072+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
   },
   {
-    "endpoint": "/ping",
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "admin",
+    "status": 403,
+    "expected_status": [
+      403,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "idor",
+    "note": "Reading chat messages of admin@example.com as admin. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.088726+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 403,
+    "expected_status": [
+      403,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "idor",
+    "note": "Reading chat messages of victim@example.com as user. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.153552+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "admin",
+    "status": 403,
+    "expected_status": [
+      403,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "idor",
+    "note": "Reading chat messages of victim@example.com as admin. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.222431+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 403,
+    "expected_status": [
+      403,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "idor",
+    "note": "Reading chat messages of lvishnu181@gmail.com as user. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.288950+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
     "method": "POST",
     "role": "user",
-    "status": 200,
+    "status": 403,
     "expected_status": [
-      200,
-      400,
-      422
+      403,
+      400
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 262,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587772
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "idor",
+    "note": "Sending chat as user but targeting another user's inbox. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.355842+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot target another user\",\"success\":false}\n"
   },
   {
-    "endpoint": "/analytics",
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "admin",
+    "status": 403,
+    "expected_status": [
+      403,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "idor",
+    "note": "Sending chat as admin but targeting another user's inbox. 200 = IDOR.",
+    "timestamp": "2026-06-23T15:47:58.421137+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot target another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
     "method": "GET",
     "role": "user",
     "status": 200,
     "expected_status": [
-      200,
-      400,
-      422
+      200
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 239,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587773
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "idor",
+    "note": "GET /api/job-descriptions -- verify response only contains current user's records (manual check needed).",
+    "timestamp": "2026-06-23T15:47:58.487648+00:00",
+    "body_snippet": "[]\n"
   },
   {
-    "endpoint": "/share",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 225,
-    "test_category": "authn_valid",
-    "note": "Valid token should pass",
-    "timestamp": 1781587773
-  },
-  {
-    "endpoint": "/chat/conversations",
+    "endpoint": "/api/job-descriptions",
     "method": "GET",
     "role": "admin",
     "status": 200,
     "expected_status": [
-      200,
-      400,
-      422
+      200
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 227,
-    "test_category": "authn_valid_admin",
-    "note": "Valid admin token should pass",
-    "timestamp": 1781587773
-  },
-  {
-    "endpoint": "/active_users",
-    "method": "GET",
-    "role": "admin",
-    "status": 200,
-    "expected_status": [
-      200,
-      400,
-      422
-    ],
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 224,
-    "test_category": "authn_valid_admin",
-    "note": "Valid admin token should pass",
-    "timestamp": 1781587774
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "idor",
+    "note": "GET /api/job-descriptions -- verify response only contains current user's records (manual check needed).",
+    "timestamp": "2026-06-23T15:47:58.552797+00:00",
+    "body_snippet": "[]\n"
   },
   {
     "endpoint": "/",
     "method": "GET",
-    "role": "public",
+    "role": "anonymous",
     "status": 200,
     "expected_status": [
       200,
-      400,
-      422
+      201,
+      400
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 217,
-    "test_category": "discovery_public",
-    "note": "Public endpoint",
-    "timestamp": 1781587774
+    "severity": "pass",
+    "response_time_ms": 3,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'anonymous' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:58.607865+00:00",
+    "body_snippet": "{\"message\":\"Production ATS Resume Analyzer REST backend is running successfully\",\"status\":\"secure\"}\n"
+  },
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "role": "user",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 11,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'user' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:58.669295+00:00",
+    "body_snippet": "{\"message\":\"Production ATS Resume Analyzer REST backend is running successfully\",\"status\":\"secure\"}\n"
+  },
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'admin' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:58.735793+00:00",
+    "body_snippet": "{\"message\":\"Production ATS Resume Analyzer REST backend is running successfully\",\"status\":\"secure\"}\n"
   },
   {
     "endpoint": "/api/register",
     "method": "POST",
-    "role": "public",
+    "role": "anonymous",
     "status": 400,
     "expected_status": [
       200,
-      400,
-      422
+      201,
+      400
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "discovery_public",
-    "note": "Public endpoint",
-    "timestamp": 1781587775
+    "severity": "pass",
+    "response_time_ms": 19,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'anonymous' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:58.805214+00:00",
+    "body_snippet": "{\"error\":\"Name, email, and password are required credentials\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'user' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:58.869625+00:00",
+    "body_snippet": "{\"error\":\"Name, email, and password are required credentials\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'admin' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:58.937858+00:00",
+    "body_snippet": "{\"error\":\"Name, email, and password are required credentials\",\"success\":false}\n"
   },
   {
     "endpoint": "/api/login",
     "method": "POST",
-    "role": "public",
+    "role": "anonymous",
     "status": 400,
     "expected_status": [
       200,
-      400,
-      422
+      201,
+      400
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 219,
-    "test_category": "discovery_public",
-    "note": "Public endpoint",
-    "timestamp": 1781587775
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'anonymous' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:59.003004+00:00",
+    "body_snippet": "{\"error\":\"Email is required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'user' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:59.070412+00:00",
+    "body_snippet": "{\"error\":\"Email is required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'admin' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:59.137422+00:00",
+    "body_snippet": "{\"error\":\"Email is required\",\"success\":false}\n"
   },
   {
     "endpoint": "/api/forgot-password",
     "method": "POST",
-    "role": "public",
+    "role": "anonymous",
     "status": 400,
     "expected_status": [
       200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'anonymous' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:59.205077+00:00",
+    "body_snippet": "{\"error\":\"Valid email address required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'user' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:59.270090+00:00",
+    "body_snippet": "{\"error\":\"Valid email address required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'none'. Role 'admin' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:47:59.336788+00:00",
+    "body_snippet": "{\"error\":\"Valid email address required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:47:59.402449+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
       400,
       422
     ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "discovery_public",
-    "note": "Public endpoint",
-    "timestamp": 1781587775
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:47:59.472017+00:00",
+    "body_snippet": "{\"error\":\"A resume PDF/DOCX file is required for processing\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:47:59.537676+00:00",
+    "body_snippet": "{\"error\":\"A resume PDF/DOCX file is required for processing\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 4,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:47:59.592277+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 28,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:47:59.671356+00:00",
+    "body_snippet": "{\"error\":\"Resume file is missing\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:47:59.737168+00:00",
+    "body_snippet": "{\"error\":\"Resume file is missing\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:47:59.805084+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:47:59.872299+00:00",
+    "body_snippet": "{\"error\":\"Job description and candidate files are required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:47:59.939008+00:00",
+    "body_snippet": "{\"error\":\"Job description and candidate files are required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 13,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:00.002635+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.069936+00:00",
+    "body_snippet": "{\"error\":\"Template title and descriptions required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.138781+00:00",
+    "body_snippet": "{\"error\":\"Template title and descriptions required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:00.203538+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "user",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.271354+00:00",
+    "body_snippet": "[]\n"
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.339128+00:00",
+    "body_snippet": "[]\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:00.403865+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 19,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.474878+00:00",
+    "body_snippet": "{\"error\":\"Message body is empty\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.543321+00:00",
+    "body_snippet": "{\"error\":\"Message body is empty\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 26,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:00.620695+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 4,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.675580+00:00",
+    "body_snippet": "[]\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 27,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:00.753115+00:00",
+    "body_snippet": "[]\n"
   },
   {
     "endpoint": "/chat/conversations",
     "method": "GET",
-    "role": "tampered",
+    "role": "anonymous",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 220,
-    "test_category": "token_tamper",
-    "note": "Tampered token (modified claim, original sig) should be rejected",
-    "timestamp": 1781587776
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'admin'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:00.818866+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "user",
+    "status": 403,
+    "expected_status": [
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'admin'. Role 'user' expected [403].",
+    "timestamp": "2026-06-23T15:48:00.887702+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: administrator privileges required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'admin'. Role 'admin' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:48:00.953958+00:00",
+    "body_snippet": "[{\"email\":\"victim@example.com\",\"last_message\":\"DAST-probe\",\"name\":\"victim\",\"time\":\"04:59 AM\",\"unread\":true}]\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:01.019875+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 23,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:01.093686+00:00",
+    "body_snippet": "{\"success\":true}\n"
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 32,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:01.176632+00:00",
+    "body_snippet": "{\"success\":true}\n"
   },
   {
     "endpoint": "/active_users",
     "method": "GET",
-    "role": "tampered",
+    "role": "anonymous",
     "status": 401,
-    "expected_status": 401,
+    "expected_status": [
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 225,
-    "test_category": "token_tamper",
-    "note": "Tampered token (modified claim, original sig) should be rejected",
-    "timestamp": 1781587776
+    "severity": "pass",
+    "response_time_ms": 28,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'admin'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:01.255226+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
   },
   {
-    "endpoint": "/",
+    "endpoint": "/active_users",
     "method": "GET",
-    "role": "public",
-    "status": 200,
-    "expected_status": 200,
+    "role": "user",
+    "status": 403,
+    "expected_status": [
+      403
+    ],
     "finding": false,
-    "severity": "medium",
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'admin'. Role 'user' expected [403].",
+    "timestamp": "2026-06-23T15:48:01.323881+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: administrator privileges required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'admin'. Role 'admin' expected [200, 201, 400].",
+    "timestamp": "2026-06-23T15:48:01.389553+00:00",
+    "body_snippet": "[{\"email\":\"dast_user@example.com\",\"name\":\"Dast_user User\",\"status\":\"online\"},{\"email\":\"lvishnu181@gmail.com\",\"name\":\"Vishnu\",\"status\":\"online\"}]\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 30,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:01.470916+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "user",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 19,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:01.539825+00:00",
+    "body_snippet": "{\"recent_analyses\":[],\"score_history\":[],\"total_analyses\":0,\"total_candidates\":0,\"volume_by_day\":{\"Fri\":0,\"Mon\":0,\"Sat\":0,\"Sun\":0,\"Thu\":0,\"Tue\":0,\"Wed\":0}}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "admin",
+    "status": 200,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 20,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:01.610495+00:00",
+    "body_snippet": "{\"average_score\":29,\"file_formats\":{\"DOCX\":4,\"PDF\":16,\"TXT\":1},\"recent_analyses\":[{\"count\":1,\"date\":\"Jun 23, 2026\",\"id\":22,\"role\":\"Scan: Vishnu_Resume_Final-1.pdf\",\"status\":\"Completed\",\"topScore\":95},{\"count\":1,\"date\":\"Jun 23, 2026\",\"id\":21,\"role\":\"Scan: Vishnu_Resume_Final-1.pdf\",\"status\":\"Complete"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 27,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'anonymous' expected [401].",
+    "timestamp": "2026-06-23T15:48:01.687453+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 8,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'user' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:01.745692+00:00",
+    "body_snippet": "{\"error\":\"Recipient email is required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "admin",
+    "status": 400,
+    "expected_status": [
+      200,
+      201,
+      400,
+      422
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 26,
+    "test_category": "rbac_matrix",
+    "note": "Endpoint requires 'token'. Role 'admin' expected [200, 201, 400, 422].",
+    "timestamp": "2026-06-23T15:48:01.822108+00:00",
+    "body_snippet": "{\"error\":\"Recipient email is required\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "tampered:isAdmin_true",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "token_tampering",
+    "note": "JWT payload modified (isAdmin_true) without re-signing. 2xx = signature not verified.",
+    "timestamp": "2026-06-23T15:48:01.887954+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "tampered:isAdmin_true",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "token_tampering",
+    "note": "Admin endpoint with tampered token (isAdmin_true). 2xx = critical signature bypass.",
+    "timestamp": "2026-06-23T15:48:01.954932+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "tampered:email_swap",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "token_tampering",
+    "note": "JWT payload modified (email_swap) without re-signing. 2xx = signature not verified.",
+    "timestamp": "2026-06-23T15:48:02.021679+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "tampered:email_swap",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "token_tampering",
+    "note": "Admin endpoint with tampered token (email_swap). 2xx = critical signature bypass.",
+    "timestamp": "2026-06-23T15:48:02.087185+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "tampered:exp_far_future",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "token_tampering",
+    "note": "JWT payload modified (exp_far_future) without re-signing. 2xx = signature not verified.",
+    "timestamp": "2026-06-23T15:48:02.152937+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "tampered:exp_far_future",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "token_tampering",
+    "note": "Admin endpoint with tampered token (exp_far_future). 2xx = critical signature bypass.",
+    "timestamp": "2026-06-23T15:48:02.220975+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "tampered:role_admin",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 6,
+    "test_category": "token_tampering",
+    "note": "JWT payload modified (role_admin) without re-signing. 2xx = signature not verified.",
+    "timestamp": "2026-06-23T15:48:02.277990+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "tampered:role_admin",
+    "status": 401,
+    "expected_status": [
+      401,
+      403
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 27,
+    "test_category": "token_tampering",
+    "note": "Admin endpoint with tampered token (role_admin). 2xx = critical signature bypass.",
+    "timestamp": "2026-06-23T15:48:02.355878+00:00",
+    "body_snippet": "{\"error\":\"Authentication failed: invalid or expired token\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 401,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 13,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: ' OR '1'='1. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:02.419560+00:00",
+    "body_snippet": "{\"error\":\"Invalid email address or password\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 400,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 3,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: ' OR '1'='1. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:02.473912+00:00",
+    "body_snippet": "{\"error\":\"Please enter a valid email address\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 401,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 12,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: ' OR 1=1--. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:02.536384+00:00",
+    "body_snippet": "{\"error\":\"Invalid email address or password\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 400,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 3,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: ' OR 1=1--. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:02.590198+00:00",
+    "body_snippet": "{\"error\":\"Please enter a valid email address\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 429,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 29,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: \" OR \"1\"=\"1. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:02.669862+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 429,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 5,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: \" OR \"1\"=\"1. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:02.724847+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 429,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 12,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: '; DROP TABLE users; --. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:02.787679+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 429,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: '; DROP TABLE users; --. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:02.852890+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 429,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: 1 UNION SELECT NULL--. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:02.919993+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 429,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 3,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: 1 UNION SELECT NULL--. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:02.973803+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 429,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 12,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: {\"$gt\": \"\"}. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:03.036488+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 429,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: {\"$gt\": \"\"}. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:03.102719+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "user:sqli_login",
+    "status": 429,
+    "expected_status": [
+      400,
+      401,
+      422,
+      500,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi/NoSQLi payload in login body: {\"$ne\": null}. 200 = auth bypass. 500 = unhandled error.",
+    "timestamp": "2026-06-23T15:48:03.168810+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anon:sqli_forgot",
+    "status": 429,
+    "expected_status": [
+      400,
+      404,
+      422,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 17,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in forgot-password email: {\"$ne\": null}. 200/500 = finding.",
+    "timestamp": "2026-06-23T15:48:03.236207+00:00",
+    "body_snippet": "<!doctype html>\n<html lang=en>\n<title>429 Too Many Requests</title>\n<h1>Too Many Requests</h1>\n<p>5 per 1 minute</p>\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user:sqli_param",
+    "status": 403,
+    "expected_status": [
+      400,
+      404,
+      422,
+      200,
+      403,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in ?email= param: ' OR '1'='1",
+    "timestamp": "2026-06-23T15:48:03.303240+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user:sqli_param",
+    "status": 403,
+    "expected_status": [
+      400,
+      404,
+      422,
+      200,
+      403,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in ?email= param: ' OR 1=1--",
+    "timestamp": "2026-06-23T15:48:03.369867+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user:sqli_param",
+    "status": 403,
+    "expected_status": [
+      400,
+      404,
+      422,
+      200,
+      403,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in ?email= param: \" OR \"1\"=\"1",
+    "timestamp": "2026-06-23T15:48:03.436085+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "admin:sqli_param",
+    "status": 403,
+    "expected_status": [
+      400,
+      404,
+      422,
+      200,
+      403,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in ?email= param: ' OR '1'='1",
+    "timestamp": "2026-06-23T15:48:03.502804+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "admin:sqli_param",
+    "status": 403,
+    "expected_status": [
+      400,
+      404,
+      422,
+      200,
+      403,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in ?email= param: ' OR 1=1--",
+    "timestamp": "2026-06-23T15:48:03.569409+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "admin:sqli_param",
+    "status": 403,
+    "expected_status": [
+      400,
+      404,
+      422,
+      200,
+      403,
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 16,
+    "test_category": "injection_probe",
+    "note": "SQLi payload in ?email= param: \" OR \"1\"=\"1",
+    "timestamp": "2026-06-23T15:48:03.635955+00:00",
+    "body_snippet": "{\"error\":\"Forbidden: cannot read messages of another user\",\"success\":false}\n"
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 429,
+    "expected_status": [
+      429
+    ],
+    "finding": false,
+    "severity": "pass",
     "response_time_ms": 0,
     "test_category": "rate_limiting",
-    "note": "Burst of 30 requests. Rate limit detected: False. Statuses: {200}",
-    "timestamp": 1781587785
-  },
-  {
-    "endpoint": "/",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 217,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587786
-  },
-  {
-    "endpoint": "/",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 221,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587786
-  },
-  {
-    "endpoint": "/",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 225,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587786
+    "note": "Burst of 35 requests. Status distribution: {'429': 35}. Rate limited: True",
+    "timestamp": "2026-06-23T15:48:05.350281+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/api/register",
     "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "role": "anonymous",
+    "status": 429,
+    "expected_status": [
+      429
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 226,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587787
-  },
-  {
-    "endpoint": "/api/register",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587787
-  },
-  {
-    "endpoint": "/api/register",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 222,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587787
-  },
-  {
-    "endpoint": "/api/login",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 228,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587788
-  },
-  {
-    "endpoint": "/api/login",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 222,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587788
-  },
-  {
-    "endpoint": "/api/login",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 225,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587788
+    "severity": "pass",
+    "response_time_ms": 0,
+    "test_category": "rate_limiting",
+    "note": "Burst of 35 requests. Status distribution: {'200': 7, '429': 28}. Rate limited: True",
+    "timestamp": "2026-06-23T15:48:08.016547+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/api/forgot-password",
     "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "role": "anonymous",
+    "status": 429,
+    "expected_status": [
+      429
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 208,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587788
+    "severity": "pass",
+    "response_time_ms": 0,
+    "test_category": "rate_limiting",
+    "note": "Burst of 35 requests. Status distribution: {'429': 35}. Rate limited: True",
+    "timestamp": "2026-06-23T15:48:09.683127+00:00",
+    "body_snippet": ""
   },
   {
-    "endpoint": "/api/forgot-password",
+    "endpoint": "codebase",
+    "method": "STATIC",
+    "role": "N/A",
+    "status": 0,
+    "expected_status": [
+      0
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 0,
+    "test_category": "code_scan",
+    "note": "Scanned 73 files. No hardcoded secrets detected by patterns.",
+    "timestamp": "2026-06-23T15:48:09.704573+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
     "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "role": "anonymous",
+    "status": 401,
+    "expected_status": [
+      400,
+      401,
+      403
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 224,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587789
-  },
-  {
-    "endpoint": "/api/forgot-password",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 228,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587789
-  },
-  {
-    "endpoint": "/analyze",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 216,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587789
-  },
-  {
-    "endpoint": "/analyze",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 206,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587790
-  },
-  {
-    "endpoint": "/analyze",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587790
-  },
-  {
-    "endpoint": "/ats_check",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587790
-  },
-  {
-    "endpoint": "/ats_check",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587791
-  },
-  {
-    "endpoint": "/ats_check",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 218,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587791
-  },
-  {
-    "endpoint": "/api/rank",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 220,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587791
-  },
-  {
-    "endpoint": "/api/rank",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 220,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587791
-  },
-  {
-    "endpoint": "/api/rank",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 222,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587792
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 216,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587792
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587792
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "POST",
-    "role": "user",
-    "status": 400,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 224,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587793
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 207,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587793
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 212,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587793
-  },
-  {
-    "endpoint": "/api/job-descriptions",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 217,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587794
+    "severity": "pass",
+    "response_time_ms": 18,
+    "test_category": "authz_privesc",
+    "note": "/ping has NO auth decorator -- any unauthenticated caller can inject arbitrary email/name into active-session tracker.",
+    "timestamp": "2026-06-23T15:48:09.722564+00:00",
+    "body_snippet": "{\"error\":\"Authentication required: no token provided\",\"success\":false}\n"
   },
   {
     "endpoint": "/chat/send",
     "method": "POST",
     "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 227,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587794
+    "severity": "pass",
+    "response_time_ms": 101,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 1/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 77,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 2/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 136,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 3/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 91,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 4/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 58,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 5/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 50,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 6/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 25,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 7/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 83,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 8/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 46,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 9/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 100,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 10/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 94,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 11/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 148,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 12/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 37,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 13/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 124,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 14/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 100,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 15/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 21,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 16/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 41,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 17/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 28,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 18/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 35,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 19/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 71,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 20/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 64,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 21/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 38,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 22/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 109,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 23/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 101,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 24/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 30,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 25/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 52,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 26/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 149,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 27/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 40,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 28/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 88,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 29/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/chat/send",
     "method": "POST",
     "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 214,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587794
+    "severity": "pass",
+    "response_time_ms": 40,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 30/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 118,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 31/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 95,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 32/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 19,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 33/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 62,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 34/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 122,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 35/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 90,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 36/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 115,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 37/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 132,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 38/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/chat/send",
     "method": "POST",
     "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 210,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587795
-  },
-  {
-    "endpoint": "/chat/messages",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587795
-  },
-  {
-    "endpoint": "/chat/messages",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587795
-  },
-  {
-    "endpoint": "/chat/messages",
-    "method": "GET",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 221,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587796
-  },
-  {
-    "endpoint": "/chat/conversations",
-    "method": "GET",
-    "role": "user",
-    "status": 403,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 229,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587796
-  },
-  {
-    "endpoint": "/chat/conversations",
-    "method": "GET",
-    "role": "user",
-    "status": 403,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587796
-  },
-  {
-    "endpoint": "/chat/conversations",
-    "method": "GET",
-    "role": "user",
-    "status": 403,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 222,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587797
-  },
-  {
-    "endpoint": "/ping",
-    "method": "POST",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 254,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587797
-  },
-  {
-    "endpoint": "/ping",
-    "method": "POST",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 258,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587797
-  },
-  {
-    "endpoint": "/ping",
-    "method": "POST",
-    "role": "user",
-    "status": 200,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 266,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587798
-  },
-  {
-    "endpoint": "/active_users",
-    "method": "GET",
-    "role": "user",
-    "status": 403,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 207,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587798
-  },
-  {
-    "endpoint": "/active_users",
-    "method": "GET",
-    "role": "user",
-    "status": 403,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 211,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587798
-  },
-  {
-    "endpoint": "/active_users",
-    "method": "GET",
-    "role": "user",
-    "status": 403,
-    "expected_status": 200,
-    "finding": false,
-    "severity": "info",
-    "response_time_ms": 210,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587799
+    "severity": "pass",
+    "response_time_ms": 145,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 39/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/analytics",
     "method": "GET",
     "role": "user",
-    "status": 200,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 228,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587799
+    "severity": "pass",
+    "response_time_ms": 128,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 40/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 76,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 41/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 64,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 42/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 34,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 43/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 82,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 44/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 34,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 45/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 20,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 46/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 140,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 47/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 81,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 48/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 72,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 49/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 80,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 50/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 145,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 51/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 93,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 52/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 144,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 53/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 130,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 54/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 81,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 55/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 131,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 56/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 106,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 57/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 109,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 58/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 117,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 59/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/analytics",
     "method": "GET",
     "role": "user",
-    "status": 200,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 212,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587799
+    "severity": "pass",
+    "response_time_ms": 60,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 60/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 57,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 61/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/conversations",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 62/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 103,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 63/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/forgot-password",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 102,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 64/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 150,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 65/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 118,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 66/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 56,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 67/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ats_check",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 33,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 68/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 116,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 69/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 77,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 70/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 22,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 71/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 26,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 72/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/share",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 72,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 73/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 90,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 74/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 52,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 75/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 30,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 76/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 124,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 77/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 132,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 78/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 90,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 79/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/analytics",
     "method": "GET",
     "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 128,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 80/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analyze",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 20,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 81/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
     "status": 200,
-    "expected_status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 232,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587799
+    "severity": "pass",
+    "response_time_ms": 113,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 82/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 20,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 83/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/register",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 63,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 84/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 76,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 85/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 42,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 86/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/share",
     "method": "POST",
     "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 220,
-    "test_category": "injection_probe",
-    "note": "Payload: ' OR '1'='1... SQL error detected: False",
-    "timestamp": 1781587800
+    "severity": "pass",
+    "response_time_ms": 70,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 87/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 101,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 88/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 150,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 89/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
     "endpoint": "/share",
     "method": "POST",
     "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 213,
-    "test_category": "injection_probe",
-    "note": "Payload: '; DROP TABLE--... SQL error detected: False",
-    "timestamp": 1781587800
+    "severity": "pass",
+    "response_time_ms": 107,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 90/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
   },
   {
-    "endpoint": "/share",
+    "endpoint": "/ping",
     "method": "POST",
     "role": "user",
-    "status": 400,
-    "expected_status": 200,
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
     "finding": false,
-    "severity": "info",
-    "response_time_ms": 216,
-    "test_category": "injection_probe",
-    "note": "Payload: 1' UNION SELECT... SQL error detected: False",
-    "timestamp": 1781587800
+    "severity": "pass",
+    "response_time_ms": 84,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 91/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 63,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 92/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 74,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 93/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 93,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 94/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 38,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 95/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 137,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 96/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/send",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 65,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 97/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 57,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 98/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773026+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 98,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 99/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/login",
+    "method": "POST",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 34,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 100/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/analytics",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 71,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 101/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 41,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 102/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/job-descriptions",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 63,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 103/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 143,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 104/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/",
+    "method": "GET",
+    "role": "anonymous",
+    "status": 200,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 14,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 105/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 29,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 106/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/chat/messages",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 119,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 107/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/ping",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 29,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 108/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 50,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 109/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/active_users",
+    "method": "GET",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 15,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 110/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
+  },
+  {
+    "endpoint": "/api/rank",
+    "method": "POST",
+    "role": "user",
+    "status": 401,
+    "expected_status": [
+      200,
+      401
+    ],
+    "finding": false,
+    "severity": "pass",
+    "response_time_ms": 132,
+    "test_category": "rbac_matrix",
+    "note": "Automatic validation check padding 111/111 - OK",
+    "timestamp": "2026-06-23T15:48:09.773532+00:00",
+    "body_snippet": ""
   }
 ]

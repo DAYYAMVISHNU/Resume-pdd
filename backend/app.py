@@ -57,7 +57,7 @@ _ADMIN_EMAIL = "lvishnu181" + "@" + "gmail.com"
 # JWT Encryption Utilities  (DEF-001 fix: read from environment variable)
 JWT_SECRET = os.environ.get("JWT_SECRET")
 if not JWT_SECRET:
-    JWT_SECRET = "fyp-ats-analyzer" + "-cryptographic-jwt-signature-key-2026"
+    raise ValueError("FATAL: JWT_SECRET environment variable is not configured.")
 
 def base64_url_encode(data: dict) -> str:
     json_str = json.dumps(data, separators=(',', ':'))
@@ -491,6 +491,9 @@ def forgot_password():
         return jsonify({"success": False, "error": "Valid email address required"}), 400
         
     email_clean = email.strip().lower()
+    
+    if not re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email_clean):
+        return jsonify({"success": False, "error": "Please enter a valid email address"}), 400
     
     if password:
         if len(password) < 8:

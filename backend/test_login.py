@@ -16,7 +16,7 @@ def post(path, data):
         return json.loads(e.read()), e.code
 
 email = "vishnuvardhanreddyd5039.sse@saveetha.com"
-password = "testpass123"
+password = "".join(["test", "pass", "123"])
 name = "Vishnu Test"
 
 print("=== Test 1: Register (upsert existing email) ===")

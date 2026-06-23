@@ -4,9 +4,20 @@ import json
 import hashlib
 import time
 from datetime import datetime
+from dotenv import load_dotenv
+
+# Load local environment variables from .env if present
+load_dotenv()
 
 _DATABASE_URL = os.environ.get('DATABASE_URL')
 _USE_POSTGRES = bool(_DATABASE_URL)
+
+if _USE_POSTGRES:
+    try:
+        import psycopg2
+    except ImportError:
+        print("[WARNING] DATABASE_URL is set, but 'psycopg2' is not installed. Falling back to local SQLite database.")
+        _USE_POSTGRES = False
 
 # psycopg2 is imported lazily inside get_db_connection() to avoid
 # crashing Vercel cold-starts when the package is installed but
