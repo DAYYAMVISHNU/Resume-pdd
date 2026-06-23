@@ -340,6 +340,8 @@ jobs:
   compile-and-deploy:
     name: "Compile Master Report & Deploy"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs:
       - selenium-web-tests
       - appium-android-tests
