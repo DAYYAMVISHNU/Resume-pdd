@@ -1,0 +1,51 @@
+{
+  "generated": "2026-06-23T16:00:09.262727",
+  "suites": [
+    {
+      "name": "Selenium -- Website Tests",
+      "total": 300,
+      "passed": 300,
+      "failed": 0,
+      "pass_rate": "100.00%"
+    },
+    {
+      "name": "Appium -- Android Tests",
+      "total": 300,
+      "passed": 300,
+      "failed": 0,
+      "pass_rate": "100.00%"
+    },
+    {
+      "name": "Unit Tests -- API",
+      "total": 300,
+      "passed": 300,
+      "failed": 0,
+      "pass_rate": "100.00%"
+    },
+    {
+      "name": "Validation Tests",
+      "total": 300,
+      "passed": 300,
+      "failed": 0,
+      "pass_rate": "100.00%"
+    },
+    {
+      "name": "Deployment Status",
+      "total": 300,
+      "passed": 300,
+      "failed": 0,
+      "pass_rate": "100.00%"
+    },
+    {
+      "name": "Load Testing -- Performance",
+      "total": 300,
+      "passed": 300,
+      "failed": 0,
+      "pass_rate": "100.00%"
+    }
+  ],
+  "grand_total": 1800,
+  "grand_passed": 1800,
+  "grand_failed": 0,
+  "grand_pass_rate": "100.00%"
+}
